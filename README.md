@@ -1,5 +1,3 @@
-# Simply Good Scanlines
+![Logo](assets/logo.png?raw=true "Logo")
 
 Scanline shader for RetroArch.
-
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
