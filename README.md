@@ -40,7 +40,7 @@ However, it might still be too heavy in certain scenarios. You can do the follow
 - Choose a lower-resolution preset. The default of 9x9 outputs a 4k vertical resolution image for 240p input.
 - Turn off scanline bleeding. This reduces the number of samples for each pixel dramatically.
 - Any setting that decreases the spot size will increase the performance: Increase hardness, decrease thicknesses, or decrease wideness.
-- TODO: Add! Switch to a preset that operates in sRGB space directly instead of linear space, marked with "nolin_". This decreases the quality of blending somewhat and gains some minimal performance.
+- Switch to a preset that operates in sRGB space directly instead of linear space. These are located in the "no_color_space_changes_presets" subdirectory and are marked with "nolin_". This decreases the quality of blending somewhat and gains some minimal performance. This also disables overshoot effects implictly.
 
 # Settings overview
 These settings can be changed in the menu at Shaders -> Shader Parameters after loading a preset.
