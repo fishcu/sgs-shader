@@ -28,7 +28,7 @@ The table below shows each setting's effect when set to a low and when set to a 
 
 | **Setting name**   | Description                          | **Set to low** | **Set to high** |
 |--------------------|--------------------------------------|----------------|-----------------|
-| _Shader disabled_  | Input images.                        | ![](assets/settings/orig_crono.png?raw=true " ") ![](assets/settings/orig_link.png?raw=true " ") ![](assets/settings/orig_ness.png?raw=true " ") ![](assets/settings/orig_sonic.png?raw=true " ") |                 |
+| _Shader disabled_  | Input images.                        | ![](assets/settings/JPEG/orig_crono.jpg?raw=true " ") ![](assets/settings/JPEG/orig_link.jpg?raw=true " ") ![](assets/settings/JPEG/orig_ness.jpg?raw=true " ") ![](assets/settings/JPEG/orig_sonic.jpg?raw=true " ") |                 |
 | Hardness           | How hard the contour of the spot is. | soft           | hard            |
 | Min. thickness     | How thick dark parts are rendered.   | minthin        | minthick        |
 | Max. thickness     | How thick bright parts are rendered. | mthin          | mthick          |
