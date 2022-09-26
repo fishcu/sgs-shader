@@ -10,7 +10,7 @@ Instead of showing a native resolution, I wanted to send high-quality and config
 This would give me all other effects like blooming, shadow masks, etc., for free!
 
 # Goals
-The purpose of this shader is to render painterly, high-resolution scanlines, as if drawn with a brush.
+The purpose of this shader is to render painterly, high-resolution scanlines, as if drawn with a perfectly uniform airbrush.
 
 ![](assets/scanlines.png?raw=true " ")
 
