@@ -63,14 +63,14 @@ The table below shows each setting's effect when set to a low and when set to a 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
 
-![](assets/screenshots/alttp.jpg?raw=true " ")
-![](assets/screenshots/alttp_2.jpg?raw=true " ")
-![](assets/screenshots/chrono_trigger.jpg?raw=true " ")
-![](assets/screenshots/dkc.jpg?raw=true " ")
-![](assets/screenshots/sf2.jpg?raw=true " ")
-![](assets/screenshots/sm.jpg?raw=true " ")
-![](assets/screenshots/starfox.jpg?raw=true " ")
-![](assets/screenshots/yoshis_island.jpg?raw=true " ")
+![](assets/screenshots/alttp.png?raw=true " ")
+![](assets/screenshots/alttp_2.png?raw=true " ")
+![](assets/screenshots/chrono_trigger.png?raw=true " ")
+![](assets/screenshots/dkc.png?raw=true " ")
+![](assets/screenshots/sf2.png?raw=true " ")
+![](assets/screenshots/sm.png?raw=true " ")
+![](assets/screenshots/starfox.png?raw=true " ")
+![](assets/screenshots/yoshis_island.png?raw=true " ")
 
 # Photos
 These have been photographed off of my own CRT. 
