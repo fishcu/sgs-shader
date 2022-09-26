@@ -13,6 +13,7 @@ layout(push_constant) uniform Push {
     float MAX_THICKNESS;
     float HARDNESS;
     float WIDENESS;
+    float BLEEDING;
 } param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
@@ -24,6 +25,7 @@ layout(std140, set = 0, binding = 0) uniform UBO {
 #pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels" 1.05 0.0 1.4 0.05
 #pragma parameter HARDNESS "HARDNESS: Hardness of the spot" 0.5 0.0 2.0 0.1
 #pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.8 0.0 3.0 0.05
+#pragma parameter BLEEDING "BLEEDING: Allow scanlines to bleed into each other." 1.0 0.0 1.0 1.0
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -101,7 +103,7 @@ void main() {
     }
 
     // Pass 2: Sample 2nd-nearest scanline.
-    {
+    if(bool(param.BLEEDING)) {
         const float sample_scanline_px = current_scanline
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float dy_px = vTexCoord.y * param.OutputSize.y

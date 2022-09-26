@@ -6,8 +6,12 @@ Scanline shader for RetroArch.
 The motivation for this shader comes from when I tried a native 240p @ 120 Hz resolution on my PC CRT.
 The black gaps were way too thick!
 
+![](assets/photos/native.jpg?raw=true " ")
+
 Instead of showing a native resolution, I wanted to send high-quality and configurable scanlines to the CRT monitor.
 This would give me all other effects like blooming, shadow masks, etc., for free!
+
+![](assets/photos/shader.jpg?raw=true " ")
 
 # Goals
 The purpose of this shader is to render painterly, high-resolution scanlines, as if drawn with a perfectly uniform airbrush.
@@ -36,7 +40,7 @@ Despite some optimization efforts, the shader is quite heavy for higher-resoluti
 However, it might still be too heavy in certain scenarios. You can do the following to increase performance, in decreasing order of impact:
 
 - Choose a lower-resolution preset. The default of 9x9 outputs a 4k vertical resolution image for 240p input.
-- TODO: Implement! Turn off scanline bleeding. This reduces the number of samples for each pixel dramatically.
+- Turn off scanline bleeding. This reduces the number of samples for each pixel dramatically.
 - Any setting that decreases the spot size will increase the performance: Increase hardness, decrease thicknesses, or decrease wideness.
 - TODO: Add! Switch to a preset that operates in sRGB space directly instead of linear space, marked with "nolin_". This decreases the quality of blending somewhat and gains some minimal performance.
 
@@ -55,6 +59,8 @@ The table below shows each setting's effect when set to a low and when set to a 
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/sharp_crono.jpg?raw=true " ")![](assets/settings/sharp_link.jpg?raw=true " ")![](assets/settings/sharp_ness.jpg?raw=true " ")![](assets/settings/sharp_sonic.jpg?raw=true " ")          | ![](assets/settings/blurry_crono.jpg?raw=true " ")![](assets/settings/blurry_link.jpg?raw=true " ")![](assets/settings/blurry_ness.jpg?raw=true " ")![](assets/settings/blurry_sonic.jpg?raw=true " ")          |
 | Overshoot strength | Overshoot & sharpening strength.     | ![](assets/settings/nons_crono.jpg?raw=true " ")![](assets/settings/nons_link.jpg?raw=true " ")![](assets/settings/nons_ness.jpg?raw=true " ")![](assets/settings/nons_sonic.jpg?raw=true " ")           | ![](assets/settings/sharpened_crono.jpg?raw=true " ")![](assets/settings/sharpened_link.jpg?raw=true " ")![](assets/settings/sharpened_ness.jpg?raw=true " ")![](assets/settings/sharpened_sonic.jpg?raw=true " ")       |
 | Erode width        | Horizontally widens darker areas.                | ![](assets/settings/nerod_crono.jpg?raw=true " ")![](assets/settings/nerod_link.jpg?raw=true " ")![](assets/settings/nerod_ness.jpg?raw=true " ")![](assets/settings/nerod_sonic.jpg?raw=true " ")          | ![](assets/settings/erod_crono.jpg?raw=true " ")![](assets/settings/erod_link.jpg?raw=true " ")![](assets/settings/erod_ness.jpg?raw=true " ")![](assets/settings/erod_sonic.jpg?raw=true " ")          |
+| Scanline bleeding        | Allows scanlines to bleed into each other. Necessary for softer spots to be rendered correctly. Turning off provides a big performance boost.          | ![](assets/settings/nobleed_crono.jpg?raw=true " ")![](assets/settings/nobleed_link.jpg?raw=true " ")![](assets/settings/nobleed_ness.jpg?raw=true " ")![](assets/settings/nobleed_sonic.jpg?raw=true " ")          | ![](assets/settings/bleed_crono.jpg?raw=true " ")![](assets/settings/bleed_link.jpg?raw=true " ")![](assets/settings/bleed_ness.jpg?raw=true " ")![](assets/settings/bleed_sonic.jpg?raw=true " ")          |
+| Scanline center        | Sub-pixel alignment of the scanline. This can control scanline sharpness when rendering at lower resolutions.          | ![](assets/settings/center1.jpg?raw=true " ")         | ![](assets/settings/center2.jpg?raw=true " ")          |
 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
@@ -67,3 +73,15 @@ All of these screenshots use default shader parameters.
 ![](assets/screenshots/sm.jpg?raw=true " ")
 ![](assets/screenshots/starfox.jpg?raw=true " ")
 ![](assets/screenshots/yoshis_island.jpg?raw=true " ")
+
+# Photos
+These have been photographed off of my own CRT. 
+
+![](assets/photos/dkc2.jpg?raw=true " ")
+![](assets/photos/dkc1.jpg?raw=true " ")
+![](assets/photos/sm1.jpg?raw=true " ")
+![](assets/photos/sm2.jpg?raw=true " ")
+![](assets/photos/sm3.jpg?raw=true " ")
+![](assets/photos/sd2.jpg?raw=true " ")
+![](assets/photos/fr1.jpg?raw=true " ")
+![](assets/photos/fr2.jpg?raw=true " ")
