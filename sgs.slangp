@@ -20,7 +20,6 @@ scale_type2 = source
 scale_x2 = 1.0
 scale_y2 = 1.0
 float_framebuffer2 = true
-# wrap_mode2 = clamp_to_border
 
 shader3 = shaders/scanline.slang
 filtear_linear3 = false

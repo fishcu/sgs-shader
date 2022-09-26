@@ -82,28 +82,6 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 void main() {
-    /*
-    // Plot kernel
-#define PLOT_X_RES 2.0f
-    const vec2 tex_coord = vTexCoord;
-    const vec2 tex_coord_pixels = tex_coord * param.SourceSize.xy;
-    if(tex_coord_pixels.x < _BLUR_KERNEL_SIZE * PLOT_X_RES) {
-        const int idx = int(tex_coord_pixels.x / PLOT_X_RES);
-        const int outer = idx / 4;
-        const int inner = idx % 4;
-        if(abs(tex_coord_pixels.y + blur_kernel[outer][inner]*100.0f - 100.0f) < 0.5) {
-            FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            return;
-        } else if (abs(tex_coord_pixels.y - 100.0f) < 0.5) {
-            FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-            return;
-        } else if (abs(tex_coord_pixels.x - _BLUR_KERNEL_SIZE * 0.5f * PLOT_X_RES) < 0.5f) {
-            FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-            return;
-        }
-    }
-    */
-
     const vec2 source_to_output_scale = param.OutputSize.xy * param.SourceSize.zw;
     const float iteration_radius = 1.6f * param.BLUR_WIDTH;
 
@@ -114,21 +92,6 @@ void main() {
         const int inner = i % 4;
         res += texture(Source, vTexCoord + vec2(x * param.OriginalSize.z, 0.0f)) * blur_kernel[outer][inner];
     }
-
-    // Store spot kernel in alpha channel to avoid extra passes for which the size cannot be controlled
-    // const vec2 coord_px = vec2(vTexCoord.x * param.OutputSize.x, vTexCoord.y * param.OutputSize.y);
-    /*
-    const vec2 coord_px = vTexCoord * param.OutputSize.xy;
-    if (coord_px.x < _SPOT_LOOKUP_SIZE && coord_px.y < _SPOT_LOOKUP_SIZE) {
-        const float x_scale = 1.0f / float(_SPOT_LOOKUP_SIZE) * 2.0f * max(1.0f, param.WIDENESS);
-        const float y_scale = x_scale;
-        const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
-        res[3] = power_gauss(coord_px.x * x_scale, coord_px.y * y_scale, param.WIDENESS, 1.0f, effective_hardness);
-        // res[0] = res[3];
-    } else {
-        res[3] = 0.0f;
-    }
-    */
     
     FragColor = res;
 }

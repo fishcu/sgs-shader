@@ -39,8 +39,6 @@ void main() {
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
-// layout(set = 0, binding = 2) uniform sampler2D SpotLookup;
-
 
 float power_gauss(float dx, float dy, float radius_x, float radius_y, float hardness) {
     return exp(-pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f), hardness));
@@ -69,10 +67,6 @@ void sample_scanline(
         for(int c = 0; c < 3; ++c) {
             const float spot_size = mix(min_thickness, max_thickness, sample_color[c]);
             const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
-            // const float inv_color_scale = 1.0f / (spot_size + 1.e-8f);
-            // const vec2 sample_coord = vec2(abs(dx_px) * x_scale * inv_color_scale, 
-            //                                abs(dy_px) * y_scale * inv_color_scale);
-            // const float w = texture(SpotLookup, sample_coord)[0];
             res[c] = max(res[c], res[c] * (1.0f - w) + sample_color[c] * w);
         }
     }
@@ -119,28 +113,4 @@ void main() {
     }
 
     FragColor = res;
-
-    // const vec2 coord_px = vTexCoord * param.OutputSize.xy;
-    // if (coord_px.x < _SPOT_LOOKUP_SIZE && coord_px.y < _SPOT_LOOKUP_SIZE) {
-    //     FragColor = vec4(texture(Source, vec2(vTexCoord.x, vTexCoord.y * source_to_output_scale.y)).a, 0.0f, 0.0f, 0.0f);
-    // }
-
-    // Plot
-    /*
-    const vec2 tex_coord = vTexCoord - vec2(0.5, 0.5);
-    const vec2 tex_coord_pixels = tex_coord * param.OutputSize.xy;
-    const float x = tex_coord_pixels.x;
-    // const float y = -(power_gauss(x, 0.0, 100.0, 100.0, 10.0) * 100.0);
-    const float y = -((iteration_limit(x / 10.0, max_thickness * param.WIDENESS, max_thickness, effective_hardness, 1.0 / 512.0)) * 10.0);
-    if(abs(tex_coord_pixels.y - y) < 2.0) {
-        FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        return;
-    } else if (abs(tex_coord_pixels.y) < 0.5) {
-        FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        return;
-    } else if (abs(tex_coord_pixels.x) < 0.5f) {
-        FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        return;
-    }
-    */
 }
