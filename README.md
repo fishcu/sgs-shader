@@ -21,6 +21,9 @@ The goal of this shader is not to replace shaders that fully simulate CRT displa
 
 As such, there are no plans to add curvature, vignetting, halation, etc., effects.
 
+# How to install and use
+Download or clone this repository. 
+
 # Settings overview
 These settings can be changed in the menu at Shaders -> Shader Parameters after loading a preset.
 
@@ -28,7 +31,11 @@ The table below shows each setting's effect when set to a low and when set to a 
 
 | **Setting name**   | Description                          | **Set to low** | **Set to high** |
 |--------------------|--------------------------------------|----------------|-----------------|
-| _Shader disabled_  | Input images.                        | ![](assets/settings/JPEG/orig_crono.jpg?raw=true " ") ![](assets/settings/JPEG/orig_link.jpg?raw=true " ") ![](assets/settings/JPEG/orig_ness.jpg?raw=true " ") ![](assets/settings/JPEG/orig_sonic.jpg?raw=true " ") |                 |
+| _Shader disabled_  | Input images.                        |
+![](assets/settings/orig_crono.jpg?raw=true " ")
+![](assets/settings/orig_link.jpg?raw=true " ")
+![](assets/settings/orig_ness.jpg?raw=true " ")
+![](assets/settings/orig_sonic.jpg?raw=true " ") |                 |
 | Hardness           | How hard the contour of the spot is. | soft           | hard            |
 | Min. thickness     | How thick dark parts are rendered.   | minthin        | minthick        |
 | Max. thickness     | How thick bright parts are rendered. | mthin          | mthick          |
