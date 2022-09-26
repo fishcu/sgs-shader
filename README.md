@@ -6,12 +6,10 @@ Scanline shader for RetroArch.
 The motivation for this shader comes from when I tried a native 240p @ 120 Hz resolution on my PC CRT.
 The black gaps were way too thick!
 
-![](assets/photos/native.jpg?raw=true " ")
-
-Instead of showing a native resolution, I wanted to send high-quality and configurable scanlines to the CRT monitor.
+Instead of showing the native resolution 240p picture, I wanted to send high-quality and configurable scanlines to the CRT monitor.
 This would give me all other effects like blooming, shadow masks, etc., for free!
 
-![](assets/photos/shader.jpg?raw=true " ")
+![](assets/photos/native.jpg?raw=true " ")![](assets/photos/shader.jpg?raw=true " ")
 
 # Goals
 The purpose of this shader is to render painterly, high-resolution scanlines, as if drawn with a perfectly uniform airbrush.
