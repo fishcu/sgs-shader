@@ -1,0 +1,36 @@
+shaders = 5
+
+shader0 = shaders/srgb_to_linear.slang
+filter_linear0 = false
+scale_type0 = source
+scale_x0 = 1.0
+scale_y0 = 1.0
+float_framebuffer0 = true
+
+shader1 = shaders/erode.slang
+filter_linear1 = false
+scale_type1 = source
+scale_x1 = 18.0
+scale_y1 = 1.0
+float_framebuffer1 = true
+
+shader2 = shaders/horiz_blur.slang
+filter_linear2 = true
+scale_type2 = source
+scale_x2 = 1.0
+scale_y2 = 1.0
+float_framebuffer2 = true
+
+shader3 = shaders/scanline.slang
+filtear_linear3 = false
+scale_type3 = source
+scale_x3 = 1.0
+scale_y3 = 18.0
+float_framebuffer3 = true
+
+shader4 = shaders/linear_to_srgb.slang
+filter_linear4 = false
+scale_type4 = source
+scale_x4 = 1.0
+scale_y4 = 1.0
+float_framebuffer4 = true
