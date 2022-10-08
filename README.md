@@ -31,7 +31,15 @@ Download or clone this repository. For example, have a look at the [releases](ht
 In RetroArch, when a core is running, go to the Quick Menu (standard hotkey: F1), Shaders -> Load Shader Preset.
 Load any of the available presets.
 
-If you like to run the shader by default when opening the core, you can set it permanently by going to the Quick Menu -> Overrides -> Save Core Overrides.
+**Note**: Slang shaders such as this one will only show up with the `vulkan`, `glcore`, and `d3d12` video drivers.
+If you are using the `gl` driver, which is the default on Linux distributions, make sure to switch to the `vulkan` or `glcore` drivers!
+
+If you like to run the shader by default when opening the core, you can set it permanently by going to the Quick Menu -> Shaders -> Save Core Preset.
+
+## Ensuring sharp scaling
+Make sure to have the following parameters set in the video settings for the best video quality:
+- Settings -> Video -> Scaling -> Integer Scale ON
+- Settings -> Video -> Scaling -> Aspect Ratio Custom. Then, scale up the "Custom Aspect Ratio (Height)" to fill your screen (e.g., 9x for 240p content on a 4k display). Then, scale up the "Custom Aspect Ratio (Width)" to match the height and to achieve a proper aspect ratio. For example, the SNES has an aspect ratio of 8:7. If choosing a 9x vertical resolution of 2016 for SNES content, the horizontal resolution should be 2016 * 8 / 7 = 2304.
 
 ## What to do if performance is slow
 Despite some optimization efforts, the shader is quite heavy for higher-resolution content. It runs well for 480p and lower resolution content on a laptop GTX 1060.
@@ -41,6 +49,8 @@ However, it might still be too heavy in certain scenarios. You can do the follow
 - Turn off scanline bleeding. This reduces the number of samples for each pixel dramatically.
 - Any setting that decreases the spot size will increase the performance: Increase hardness, decrease thicknesses, or decrease wideness.
 - Switch to a preset that operates in sRGB space directly instead of linear space. These are located in the "no_color_space_changes_presets" subdirectory and are marked with "nolin_". This decreases the quality of blending somewhat and gains some minimal performance. This also disables overshoot effects implictly.
+
+Note: When using the "nolin_" presets, run them directly from within the "no_color_space_changes_presets" directory.
 
 # Settings overview
 These settings can be changed in the menu at Shaders -> Shader Parameters after loading a preset.
@@ -56,7 +66,7 @@ The table below shows each setting's effect when set to a low and when set to a 
 | Wideness           | Aspect ratio of the beam.            | ![](assets/settings/narrow_crono.jpg?raw=true " ")![](assets/settings/narrow_link.jpg?raw=true " ")![](assets/settings/narrow_ness.jpg?raw=true " ")![](assets/settings/narrow_sonic.jpg?raw=true " ")         | ![](assets/settings/wide_crono.jpg?raw=true " ")![](assets/settings/wide_link.jpg?raw=true " ")![](assets/settings/wide_ness.jpg?raw=true " ")![](assets/settings/wide_sonic.jpg?raw=true " ")            |
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/sharp_crono.jpg?raw=true " ")![](assets/settings/sharp_link.jpg?raw=true " ")![](assets/settings/sharp_ness.jpg?raw=true " ")![](assets/settings/sharp_sonic.jpg?raw=true " ")          | ![](assets/settings/blurry_crono.jpg?raw=true " ")![](assets/settings/blurry_link.jpg?raw=true " ")![](assets/settings/blurry_ness.jpg?raw=true " ")![](assets/settings/blurry_sonic.jpg?raw=true " ")          |
 | Overshoot strength | Overshoot & sharpening strength.     | ![](assets/settings/nons_crono.jpg?raw=true " ")![](assets/settings/nons_link.jpg?raw=true " ")![](assets/settings/nons_ness.jpg?raw=true " ")![](assets/settings/nons_sonic.jpg?raw=true " ")           | ![](assets/settings/sharpened_crono.jpg?raw=true " ")![](assets/settings/sharpened_link.jpg?raw=true " ")![](assets/settings/sharpened_ness.jpg?raw=true " ")![](assets/settings/sharpened_sonic.jpg?raw=true " ")       |
-| Erode width        | Horizontally widens darker areas.                | ![](assets/settings/nerod_crono.jpg?raw=true " ")![](assets/settings/nerod_link.jpg?raw=true " ")![](assets/settings/nerod_ness.jpg?raw=true " ")![](assets/settings/nerod_sonic.jpg?raw=true " ")          | ![](assets/settings/erod_crono.jpg?raw=true " ")![](assets/settings/erod_link.jpg?raw=true " ")![](assets/settings/erod_ness.jpg?raw=true " ")![](assets/settings/erod_sonic.jpg?raw=true " ")          |
+| Erode width        | Horizontally widens darker areas. Can be used to achieve equal width of white and dark pixels, for example with text.                | ![](assets/settings/nerod_crono.jpg?raw=true " ")![](assets/settings/nerod_link.jpg?raw=true " ")![](assets/settings/nerod_ness.jpg?raw=true " ")![](assets/settings/nerod_sonic.jpg?raw=true " ")          | ![](assets/settings/erod_crono.jpg?raw=true " ")![](assets/settings/erod_link.jpg?raw=true " ")![](assets/settings/erod_ness.jpg?raw=true " ")![](assets/settings/erod_sonic.jpg?raw=true " ")          |
 | Scanline bleeding        | Allows scanlines to bleed into each other. Necessary for softer spots to be rendered correctly. Turning off provides a big performance boost.          | ![](assets/settings/nobleed_crono.jpg?raw=true " ")![](assets/settings/nobleed_link.jpg?raw=true " ")![](assets/settings/nobleed_ness.jpg?raw=true " ")![](assets/settings/nobleed_sonic.jpg?raw=true " ")          | ![](assets/settings/bleed_crono.jpg?raw=true " ")![](assets/settings/bleed_link.jpg?raw=true " ")![](assets/settings/bleed_ness.jpg?raw=true " ")![](assets/settings/bleed_sonic.jpg?raw=true " ")          |
 | Scanline center        | Sub-pixel alignment of the scanline. This can control scanline sharpness when rendering at lower resolutions.          | ![](assets/settings/center1.jpg?raw=true " ")         | ![](assets/settings/center2.jpg?raw=true " ")          |
 
