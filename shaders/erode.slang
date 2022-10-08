@@ -5,14 +5,14 @@ layout(push_constant) uniform Push {
 	vec4 OriginalSize;
 	vec4 SourceSize;
 	uint FrameCount;
-    float ERODE_WIDTH;
+    float EROSION_WIDTH;
 } param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
    mat4 MVP;
 } global;
 
-#pragma parameter ERODE_WIDTH "ERODE_WIDTH: Erosion width in pixels" 0.6 0.0 2.0 0.05
+#pragma parameter EROSION_WIDTH "EROSION_WIDTH: Erosion width in pixels." 0.6 0.0 2.0 0.05
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -31,7 +31,7 @@ layout(set = 0, binding = 1) uniform sampler2D Source;
 
 void main() {
     const vec2 source_to_output_scale = param.OutputSize.xy * param.SourceSize.zw;
-    const float erosion_radius_f = param.ERODE_WIDTH * source_to_output_scale.x * 0.5f;
+    const float erosion_radius_f = param.EROSION_WIDTH * source_to_output_scale.x * 0.5f;
     const int erosion_radius = int(erosion_radius_f);
 
     vec4 res = texture(Source, vTexCoord);

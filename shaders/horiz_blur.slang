@@ -13,7 +13,7 @@ layout(std140, set = 0, binding = 0) uniform UBO {
    mat4 MVP;
 } global;
 
-#pragma parameter BLUR_WIDTH "BLUR_WIDTH: Horizontal blur in pixels" 0.15 0.0 4.0 0.05
+#pragma parameter BLUR_WIDTH "BLUR_WIDTH: Horizontal blur width in pixels." 0.15 0.0 4.0 0.05
 #pragma parameter OVERSHOOT_STRENGTH "OVERSHOOT_STRENGTH: Overshooting & sharpening strength." 0.8 0.0 1.0 0.05
 
 // More samples means fewer artifacts but decreased performance.
