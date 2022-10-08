@@ -26,7 +26,7 @@ The goal of this shader is not to replace shaders that fully simulate CRT displa
 As such, there are no plans to add curvature, vignetting, halation, etc., effects.
 
 # How to install and use
-Download or clone this repository. For example, have a look at the [releases](https://github.com/fishcu/sgs-shader/releases) page.
+Download or clone this repository. The latest stable release can be downloaded on the [releases](https://github.com/fishcu/sgs-shader/releases) page.
 
 In RetroArch, when a core is running, go to the Quick Menu (standard hotkey: F1), Shaders -> Load Shader Preset.
 Load any of the available presets.
