@@ -1,7 +1,5 @@
 #version 450
 
-#include "common.inc"
-
 layout(push_constant) uniform Push {
 	vec4 OutputSize;
 	vec4 OriginalSize;
@@ -13,6 +11,7 @@ layout(push_constant) uniform Push {
     float MAX_THICKNESS;
     float HARDNESS;
     float WIDENESS;
+    float SPOT_GAMMA;
     float BLEEDING;
 } param;
 
@@ -21,10 +20,11 @@ layout(std140, set = 0, binding = 0) uniform UBO {
 } global;
 
 #pragma parameter SCANLINE_CENTER "SCANLINE_CENTER: Scanline vertical position within the pixel" 0.55 0.0 1.0 0.01
-#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels" 0.35 0.0 1.4 0.05
-#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels" 1.0 0.0 1.4 0.05
+#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels" 0.4 0.0 1.4 0.05
+#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels"0.9 0.0 1.4 0.05
 #pragma parameter HARDNESS "HARDNESS: Hardness of the spot" 0.45 0.0 2.0 0.05
-#pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.6 0.0 3.0 0.05
+#pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.95 0.0 3.0 0.05
+#pragma parameter SPOT_GAMMA "SPOT_GAMMA: Shape spot size curve. Affects brightness." 0.6 -3.0 3.0 0.1
 #pragma parameter BLEEDING "BLEEDING: Allow scanlines to bleed into each other." 1.0 0.0 1.0 1.0
 
 #pragma stage vertex
@@ -60,14 +60,16 @@ void sample_scanline(
         sampler2D source,
         float x_coord,
         float x_px_to_norm_scale,
-        float effective_hardness, 
+        float effective_hardness,
+        float gamma_exp,
         inout vec4 res) {
+    const float d_thickness = max_thickness - min_thickness;
     for(int sample_x_offset_px = -x_sample_radius; sample_x_offset_px <= x_sample_radius; ++sample_x_offset_px) {
         const float dx_px = sample_x_offset_px;
         const vec4 sample_color = vec4(texture(source,
             vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb, 1.0f);
         for(int c = 0; c < 3; ++c) {
-            const float spot_size = mix(min_thickness, max_thickness, sample_color[c]);
+            const float spot_size = min_thickness + d_thickness * pow(sample_color[c], gamma_exp);
             const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
             res[c] = max(res[c], res[c] * (1.0f - w) + sample_color[c] * w);
         }
@@ -80,6 +82,7 @@ void main() {
     const float max_thickness = param.MAX_THICKNESS * source_to_output_scale.y * 0.5f;
     const float scanline_offset = param.SCANLINE_CENTER * param.SourceSize.w;
     const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
+    const float gamma_exp = exp(param.SPOT_GAMMA);
 
     vec4 res = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -99,7 +102,7 @@ void main() {
         const int x_sample_radius = int(iteration_limit(dy_px, max_thickness * param.WIDENESS, max_thickness,
                                                         effective_hardness, 1.0f / 64.0f));
         sample_scanline(sample_scanline_px * param.SourceSize.w, min_thickness, max_thickness, dy_px,
-                        x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, res);
+                        x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
 
     // Pass 2: Sample 2nd-nearest scanline.
@@ -111,7 +114,7 @@ void main() {
         const int x_sample_radius = int(iteration_limit(dy_px, max_thickness * param.WIDENESS, max_thickness,
                                                         effective_hardness, 1.0f / 64.0f));
         sample_scanline(sample_scanline_px * param.SourceSize.w, min_thickness, max_thickness, dy_px,
-                        x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, res);
+                        x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
 
     FragColor = res;

@@ -1,7 +1,5 @@
 #version 450
 
-#include "common.inc"
-
 layout(push_constant) uniform Push {
 	vec4 OutputSize;
 	vec4 OriginalSize;
@@ -36,6 +34,5 @@ float srgb_to_linear(float x) {
 
 void main() {
     const vec4 s = texture(Original, vTexCoord);
-    FragColor = vec4(srgb_to_linear(s[0]), srgb_to_linear(s[1]), srgb_to_linear(s[2]), 1.0f)
-                    * _OVERSHOOT_HEADROOM;
+    FragColor = vec4(srgb_to_linear(s[0]), srgb_to_linear(s[1]), srgb_to_linear(s[2]), 1.0f);
 }
