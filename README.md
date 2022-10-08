@@ -45,12 +45,9 @@ Make sure to have the following parameters set in the video settings for the bes
 Despite some optimization efforts, the shader is quite heavy for higher-resolution content. It runs well for 480p and lower resolution content on a laptop GTX 1060.
 However, it might still be too heavy in certain scenarios. You can do the following to increase performance, in decreasing order of impact:
 
-- Choose a lower-resolution preset. The default of 9x9 outputs a 4k vertical resolution image for 240p input.
+- Switch to the "potato PC" preset. This will render at 5x5 the input resolution instead of the default 9x9. This runs at several thousand FPS even for higher-resolution cores on my laptop GTX 1060.
 - Turn off scanline bleeding. This reduces the number of samples for each pixel dramatically.
 - Any setting that decreases the spot size will increase the performance: Increase hardness, decrease thicknesses, or decrease wideness.
-- Switch to a preset that operates in sRGB space directly instead of linear space. These are located in the "no_color_space_changes_presets" subdirectory and are marked with "nolin_". This decreases the quality of blending somewhat and gains some minimal performance.
-
-Note: When using the "nolin_" presets, run them directly from within the "no_color_space_changes_presets" directory.
 
 # Settings overview
 These settings can be changed in the menu at Shaders -> Shader Parameters after loading a preset.
