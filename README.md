@@ -41,6 +41,7 @@ The following presets are available:
 - `sgs_DEFAULT`: The default preset. Optimized for 240p resolution content on 4k displays. However, it will also work for other input and output resolutions ("freescale" behavior).
 - `sgs_force_320x240`: This samples the input at a fixed resolution of 320 x 240 pixels. Can be used with higher resolution 4:3 content to achieve a 240p look.
 - `sgs_force_640x360`: This samples the input at a fixed resolution of 640 x 360 pixels. Can be used with higher resolution 16:9 content to achieve a 360p look.
+- `sgs_force_427x240`: This samples the input at a fixed resolution of 427 x 240 pixels. Can be used with higher resolution 16:9 content to achieve a 240p look.
 - `sgs_potato_pc`: Same as the default preset, but renders at a lower internal resolution. This should be used if the default preset runs too slow on your computer.
 - `sgs_super_high_res`: Same as the default preset, but renders at a much higher resolution. Ideal for running on beefy computers or 8k resolution displays, or for rendering small sprites. May crash on older GPUs that do not support large textures.
 
