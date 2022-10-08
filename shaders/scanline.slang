@@ -20,11 +20,11 @@ layout(std140, set = 0, binding = 0) uniform UBO {
    mat4 MVP;
 } global;
 
-#pragma parameter SCANLINE_CENTER "SCANLINE_CENTER: Scanline vertical position within the pixel" 0.5 0.0 1.0 0.01
-#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels" 0.5 0.0 1.4 0.05
-#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels" 1.05 0.0 1.4 0.05
-#pragma parameter HARDNESS "HARDNESS: Hardness of the spot" 0.5 0.0 2.0 0.1
-#pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.8 0.0 3.0 0.05
+#pragma parameter SCANLINE_CENTER "SCANLINE_CENTER: Scanline vertical position within the pixel" 0.55 0.0 1.0 0.01
+#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels" 0.35 0.0 1.4 0.05
+#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels" 1.0 0.0 1.4 0.05
+#pragma parameter HARDNESS "HARDNESS: Hardness of the spot" 0.45 0.0 2.0 0.05
+#pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.6 0.0 3.0 0.05
 #pragma parameter BLEEDING "BLEEDING: Allow scanlines to bleed into each other." 1.0 0.0 1.0 1.0
 
 #pragma stage vertex

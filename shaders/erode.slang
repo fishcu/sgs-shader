@@ -12,7 +12,7 @@ layout(std140, set = 0, binding = 0) uniform UBO {
    mat4 MVP;
 } global;
 
-#pragma parameter ERODE_WIDTH "ERODE_WIDTH: Erosion width in pixels" 0.5 0.0 2.0 0.05
+#pragma parameter ERODE_WIDTH "ERODE_WIDTH: Erosion width in pixels" 0.4 0.0 2.0 0.05
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
