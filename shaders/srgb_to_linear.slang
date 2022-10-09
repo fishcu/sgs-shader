@@ -5,11 +5,14 @@ layout(push_constant) uniform Push {
 	vec4 OriginalSize;
 	vec4 SourceSize;
 	uint FrameCount;
+    float BLACK_POINT;
 } param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
    mat4 MVP;
 } global;
+
+#pragma parameter BLACK_POINT "BLACK_POINT: Output brightness of black input" 0.0 0.0 0.5 0.01
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -34,5 +37,8 @@ float srgb_to_linear(float x) {
 
 void main() {
     const vec4 s = texture(Original, vTexCoord);
-    FragColor = vec4(srgb_to_linear(s[0]), srgb_to_linear(s[1]), srgb_to_linear(s[2]), 1.0f);
+    const float output_range = 1.0f - param.BLACK_POINT;
+    FragColor = vec4(param.BLACK_POINT + srgb_to_linear(s[0]) * output_range,
+                     param.BLACK_POINT + srgb_to_linear(s[1]) * output_range,
+                     param.BLACK_POINT + srgb_to_linear(s[2]) * output_range, 1.0f);
 }
