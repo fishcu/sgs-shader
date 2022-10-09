@@ -20,8 +20,8 @@ layout(std140, set = 0, binding = 0) uniform UBO {
 } global;
 
 #pragma parameter SCANLINE_CENTER "SCANLINE_CENTER: Scanline vertical position within the pixel." 0.55 0.0 1.0 0.01
-#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels." 0.4 0.0 1.4 0.05
-#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels." 0.9 0.0 1.4 0.05
+#pragma parameter MIN_THICKNESS "MIN_THICKNESS: Scanline thickness of dark pixels." 0.4 0.0 1.4 0.02
+#pragma parameter MAX_THICKNESS "MAX_THICKNESS: Scanline thickness of bright pixels." 0.9 0.0 1.4 0.02
 #pragma parameter HARDNESS "HARDNESS: Hardness of the spot." 0.5 0.0 2.0 0.05
 #pragma parameter WIDENESS "WIDENESS: Shape wideness of the spot. 1 is a circle." 0.95 0.0 3.0 0.05
 #pragma parameter SPOT_GAMMA "SPOT_GAMMA: Shape spot size curve. Affects brightness." 0.6 -3.0 3.0 0.1
