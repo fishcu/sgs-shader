@@ -1,15 +1,15 @@
 #version 450
 
 layout(push_constant) uniform Push {
-	vec4 OutputSize;
-	vec4 OriginalSize;
-	vec4 SourceSize;
-	uint FrameCount;
+    vec4 OutputSize;
+    vec4 OriginalSize;
+    vec4 SourceSize;
+    uint FrameCount;
     float EROSION_WIDTH;
 } param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
-   mat4 MVP;
+    mat4 MVP;
 } global;
 
 #pragma parameter EROSION_WIDTH "EROSION_WIDTH: Erosion width in pixels." 0.6 0.0 2.0 0.05

@@ -100,7 +100,7 @@ if __name__ == "__main__":
     print(pattern)
     verify_pattern(pattern, args.length, args.fineness, args.brightness)
     print("\n\n")
-    # sys.exit(0)
+    sys.exit(0)
 
     # test
     for l in range(2, 33):

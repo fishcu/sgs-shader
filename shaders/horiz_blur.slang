@@ -1,22 +1,22 @@
 #version 450
 
 layout(push_constant) uniform Push {
-	vec4 OutputSize;
-	vec4 OriginalSize;
-	vec4 SourceSize;
-	uint FrameCount;
+    vec4 OutputSize;
+    vec4 OriginalSize;
+    vec4 SourceSize;
+    uint FrameCount;
     float BLUR_WIDTH;
     float OVERSHOOT_STRENGTH;
     float BLACK_POINT;
 } param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
-   mat4 MVP;
+    mat4 MVP;
 } global;
 
 #pragma parameter BLUR_WIDTH "BLUR_WIDTH: Horizontal blur width in pixels." 0.15 0.0 4.0 0.05
 #pragma parameter OVERSHOOT_STRENGTH "OVERSHOOT_STRENGTH: Overshooting & sharpening strength." 0.8 0.0 1.0 0.05
-#pragma parameter BLACK_POINT "BLACK_POINT: Output brightness of black input" 0.0 0.0 0.5 0.01
+#pragma parameter BLACK_POINT "BLACK_POINT: Output brightness of black input" 0.005 0.0 0.1 0.005
 
 // More samples means fewer artifacts but decreased performance.
 // The upper limit that does not crash RetroArch is 64.
