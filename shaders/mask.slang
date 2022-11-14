@@ -1,5 +1,7 @@
 #version 450
 
+#include "parameters.inc"
+
 layout(push_constant) uniform Push {
     vec4 OutputSize;
     vec4 OriginalSize;
@@ -15,13 +17,6 @@ layout(push_constant) uniform Push {
 
 #define MAX_MASK_PATTERN_SIZE 64
 #define MASK_PATTERN_SIZE 60
-
-#pragma parameter SCANLINE_CENTER "SCANLINE_CENTER: Scanline vertical position within the pixel." 0.55 0.0 1.0 0.01
-// #pragma parameter MASK_PATTERN_SIZE "MASK_PATTERN_SIZE: Cycle length of mask pattern." 64.0 2.0 64.0 1.0
-#pragma parameter MASK_FINENESS "MASK_FINENESS: From coarse to fine" 25.0 1.0 30.0 1.0
-#pragma parameter MASK_BRIGHTNESS "MASK_BRIGHTNESS: Controls percentage of lit pixels" 1.0 0.0 1.0 0.05
-#pragma parameter MASK_STRENGTH "MASK_STRENGTH: Controls opaqueness of mask." 0.99 0.0 1.0 0.01
-#pragma parameter MASK_ENABLE_SUBPIXELS "MASK_ENABLE_SUBPIXELS: Apply at the subpixel level." 1.0 0.0 1.0 1.0
 
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;

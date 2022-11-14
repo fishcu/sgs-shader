@@ -1,5 +1,7 @@
 #version 450
 
+#include "parameters.inc"
+
 layout(push_constant) uniform Push {
     vec4 OutputSize;
     vec4 OriginalSize;
@@ -11,8 +13,6 @@ layout(push_constant) uniform Push {
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;
 } global;
-
-#pragma parameter OUTPUT_GAMMA "OUTPUT_GAMMA: Output gamma." 2.4 1.0 3.4 0.1
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
