@@ -1,4 +1,4 @@
-shaders = 6
+shaders = 7
 
 shader0 = shaders/srgb_to_linear.slang
 filter_linear0 = false
@@ -14,7 +14,7 @@ scale_x1 = 9.0
 scale_y1 = 1.0
 float_framebuffer1 = true
 
-shader2 = shaders/horiz_blur.slang
+shader2 = shaders/blur_input_horiz.slang
 filter_linear2 = true
 scale_type2 = source
 scale_x2 = 1.0
@@ -35,9 +35,16 @@ scale_x4 = 1.0
 scale_y4 = 1.0
 float_framebuffer4 = true
 
-shader5 = shaders/linear_to_srgb.slang
-filter_linear5 = false
+shader5 = shaders/blur_mask.slang
+filter_linear5 = true
 scale_type5 = source
 scale_x5 = 1.0
 scale_y5 = 1.0
 float_framebuffer5 = true
+
+shader6 = shaders/linear_to_srgb.slang
+filter_linear6 = false
+scale_type6 = source
+scale_x6 = 1.0
+scale_y6 = 1.0
+float_framebuffer6 = true

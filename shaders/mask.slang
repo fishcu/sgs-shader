@@ -7,6 +7,7 @@ layout(push_constant) uniform Push {
     vec4 OriginalSize;
     vec4 SourceSize;
     uint FrameCount;
+    float MAX_THICKNESS;
     float SCANLINE_CENTER;
     float MASK_PATTERN_SIZE;
     float MASK_FINENESS;
@@ -16,7 +17,7 @@ layout(push_constant) uniform Push {
 } param;
 
 #define MAX_MASK_PATTERN_SIZE 64
-#define MASK_PATTERN_SIZE 60
+// #define MASK_PATTERN_SIZE 60
 
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;
@@ -30,8 +31,8 @@ layout(location = 1) out vec4[MAX_MASK_PATTERN_SIZE / 4] mask;
 
 void generate_mask_pattern(out vec4[MAX_MASK_PATTERN_SIZE / 4] mask, int length, float fineness, float brightness) {
     // Number of groups is in [1, length / 2]
-    // const int num_groups = int(mix(1, length / 2, fineness));
-    const int num_groups = int(fineness);
+    const int num_groups = int(mix(1, length / 2, fineness));
+    // const int num_groups = int(fineness);
     // Num active pixels is between 1 per group,
     // and filling all pixels except gaps between groups
     const int tot_num_active = int(mix(num_groups, length - num_groups, brightness));
@@ -49,7 +50,7 @@ void generate_mask_pattern(out vec4[MAX_MASK_PATTERN_SIZE / 4] mask, int length,
             mask[i/4][i%4] = 1.0f;
             active_accum_error += num_groups;
         } else {
-            mask[i/4][i%4] = 1.0f - param.MASK_STRENGTH;
+            mask[i/4][i%4] = 0.05f * (1.0f - param.MASK_STRENGTH);
         }
     }
 }
@@ -57,7 +58,11 @@ void generate_mask_pattern(out vec4[MAX_MASK_PATTERN_SIZE / 4] mask, int length,
 void main() {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
-    generate_mask_pattern(mask, MASK_PATTERN_SIZE, param.MASK_FINENESS, param.MASK_BRIGHTNESS);
+    generate_mask_pattern(
+        mask,
+        int(param.MASK_PATTERN_SIZE),
+        param.MASK_FINENESS,
+        param.MASK_BRIGHTNESS);
 }
 
 #pragma stage fragment
@@ -66,14 +71,18 @@ layout(location = 1) in vec4[MAX_MASK_PATTERN_SIZE/4] mask;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
-float attenuate(float val, float offset_to_center) {
-    return pow(val, 0.5f + offset_to_center * offset_to_center * 10.0f);
+float attenuate(float val, float offset_to_center, float radius) {
+    return pow(val, param.MASK_STRENGTH * (0.8f +
+                    param.MASK_STRENGTH * offset_to_center * offset_to_center * 80.0f * radius));
 }
 
 void main() {
     FragColor = texture(Source, vTexCoord);
+    if (param.MASK_STRENGTH < 1.0e-3f) {
+        return;
+    }
     const int coord_x = int(vTexCoord.x * param.OutputSize.x);
-    const int pattern_size = MASK_PATTERN_SIZE;
+    const int pattern_size = int(param.MASK_PATTERN_SIZE);
     const float current_scanline = vTexCoord.y * param.OriginalSize.y;
     float offset_to_center = abs(fract(current_scanline) - param.SCANLINE_CENTER);
     if (offset_to_center > 0.5f) {
@@ -85,11 +94,11 @@ void main() {
             {(coord_x*3 + 0) % pattern_size,
              (coord_x*3 + 1) % pattern_size,
              (coord_x*3 + 2) % pattern_size};
-        FragColor[0] *= attenuate(mask[idx[0]/4][idx[0]%4], offset_to_center);
-        FragColor[1] *= attenuate(mask[idx[1]/4][idx[1]%4], offset_to_center);
-        FragColor[2] *= attenuate(mask[idx[2]/4][idx[2]%4], offset_to_center);
+        FragColor[0] *= attenuate(mask[idx[0]/4][idx[0]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
+        FragColor[1] *= attenuate(mask[idx[1]/4][idx[1]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
+        FragColor[2] *= attenuate(mask[idx[2]/4][idx[2]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
     } else {
         const int idx = coord_x % pattern_size;
-        FragColor.rgb *= attenuate(mask[idx/4][idx%4], offset_to_center);
+        FragColor.rgb *= attenuate(mask[idx/4][idx%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
     }
 }

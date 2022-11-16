@@ -14,7 +14,7 @@ scale_x1 = 5.0
 scale_y1 = 1.0
 float_framebuffer1 = true
 
-shader2 = shaders/horiz_blur.slang
+shader2 = shaders/blur_input_horiz.slang
 filter_linear2 = true
 scale_type2 = source
 scale_x2 = 1.0

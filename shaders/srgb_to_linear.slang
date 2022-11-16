@@ -37,8 +37,8 @@ float srgb_to_linear(float x) {
 
 void main() {
     const vec4 s = texture(Original, vTexCoord);
-    const float output_range = 1.0f - param.BLACK_POINT;
-    FragColor = vec4(param.BLACK_POINT + srgb_to_linear(s[0]) * output_range,
-                     param.BLACK_POINT + srgb_to_linear(s[1]) * output_range,
-                     param.BLACK_POINT + srgb_to_linear(s[2]) * output_range, 1.0f);
+    const float output_range = 1.0f - 0.1f * param.BLACK_POINT;
+    FragColor = vec4(0.1f * param.BLACK_POINT + srgb_to_linear(s[0]) * output_range,
+                     0.1f * param.BLACK_POINT + srgb_to_linear(s[1]) * output_range,
+                     0.1f * param.BLACK_POINT + srgb_to_linear(s[2]) * output_range, 1.0f);
 }
