@@ -1,6 +1,7 @@
 #version 450
 
 #include "parameters.inc"
+#include "signal_to_thickness.inc"
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;
@@ -58,13 +59,12 @@ void sample_scanline(
         float effective_hardness,
         float gamma_exp,
         inout vec4 res) {
-    const float d_thickness = max_thickness - min_thickness;
     for(int sample_x_offset_px = -x_sample_radius; sample_x_offset_px <= x_sample_radius; ++sample_x_offset_px) {
         const float dx_px = sample_x_offset_px;
         const vec4 sample_color = vec4(texture(source,
             vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb, 1.0f);
         for(int c = 0; c < 3; ++c) {
-            const float spot_size = min_thickness + d_thickness * (sample_color[c] > 1.0 ? sample_color[c] : pow(sample_color[c], gamma_exp));
+            const float spot_size = signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
             const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
             res[c] = max(res[c], res[c] * (1.0f - w) + sample_color[c] * w);
         }

@@ -1,13 +1,17 @@
 #version 450
 
 #include "parameters.inc"
+#include "signal_to_thickness.inc"
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;
     vec4 OriginalSize;
     vec4 SourceSize;
+    vec4 ScanlineSignalSize;
     uint FrameCount;
+    float MIN_THICKNESS;
     float MAX_THICKNESS;
+    float SPOT_GAMMA;
     float SCANLINE_CENTER;
     float MASK_PATTERN_SIZE;
     float MASK_FINENESS;
@@ -70,6 +74,7 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 1) in vec4[MAX_MASK_PATTERN_SIZE/4] mask;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
+layout(set = 0, binding = 2) uniform sampler2D ScanlineSignal;
 
 float attenuate(float val, float offset_to_center, float radius) {
     return pow(val, param.MASK_STRENGTH * (0.8f +
@@ -81,6 +86,7 @@ void main() {
     if (param.MASK_STRENGTH < 1.0e-3f) {
         return;
     }
+    const vec3 scanline_signal = texture(ScanlineSignal, vTexCoord).rgb;
     const int coord_x = int(vTexCoord.x * param.OutputSize.x);
     const int pattern_size = int(param.MASK_PATTERN_SIZE);
     const float current_scanline = vTexCoord.y * param.OriginalSize.y;
@@ -88,17 +94,28 @@ void main() {
     if (offset_to_center > 0.5f) {
         offset_to_center = abs(offset_to_center - 1.0f);
     }
+    const float min_radius = param.MIN_THICKNESS * 0.5f;
+    const float max_radius = param.MAX_THICKNESS * 0.5f;
+    const float gamma_exp = exp(param.SPOT_GAMMA);
     const bool enable_subpixels = param.MASK_ENABLE_SUBPIXELS > 0.5f;
     if (enable_subpixels) {
         const int idx[3] = 
             {(coord_x*3 + 0) % pattern_size,
              (coord_x*3 + 1) % pattern_size,
              (coord_x*3 + 2) % pattern_size};
-        FragColor[0] *= attenuate(mask[idx[0]/4][idx[0]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
-        FragColor[1] *= attenuate(mask[idx[1]/4][idx[1]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
-        FragColor[2] *= attenuate(mask[idx[2]/4][idx[2]%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
+        FragColor[0] *= attenuate(mask[idx[0]/4][idx[0]%4], offset_to_center,
+            signal_to_thickness(scanline_signal[0], min_radius, max_radius, gamma_exp));
+        FragColor[1] *= attenuate(mask[idx[1]/4][idx[1]%4], offset_to_center,
+            signal_to_thickness(scanline_signal[1], min_radius, max_radius, gamma_exp));
+        FragColor[2] *= attenuate(mask[idx[2]/4][idx[2]%4], offset_to_center,
+            signal_to_thickness(scanline_signal[2], min_radius, max_radius, gamma_exp));
     } else {
         const int idx = coord_x % pattern_size;
-        FragColor.rgb *= attenuate(mask[idx/4][idx%4], offset_to_center, param.MAX_THICKNESS * 0.5f);
+        FragColor[0] *= attenuate(mask[idx/4][idx%4], offset_to_center,
+            signal_to_thickness(scanline_signal[0], min_radius, max_radius, gamma_exp));
+        FragColor[1] *= attenuate(mask[idx/4][idx%4], offset_to_center,
+            signal_to_thickness(scanline_signal[1], min_radius, max_radius, gamma_exp));
+        FragColor[2] *= attenuate(mask[idx/4][idx%4], offset_to_center,
+            signal_to_thickness(scanline_signal[2], min_radius, max_radius, gamma_exp));
     }
 }

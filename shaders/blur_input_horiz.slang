@@ -3,6 +3,8 @@
 #include "parameters.inc"
 #include "blur_horiz.slang.inc"
 
+#pragma name ScanlineSignal
+
 layout(push_constant) uniform Push {
     vec4 OutputSize;
     vec4 OriginalSize;
