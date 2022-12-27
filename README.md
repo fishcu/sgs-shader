@@ -90,10 +90,10 @@ Most settings can be changed smoothly in the given range. For these settings, an
 # Full-size screenshots
 All of these screenshots use default shader parameters.
 
+![](assets/screenshots/dkc.png?raw=true " ")
 ![](assets/screenshots/alttp.png?raw=true " ")
 ![](assets/screenshots/alttp_2.png?raw=true " ")
 ![](assets/screenshots/chrono_trigger.png?raw=true " ")
-![](assets/screenshots/dkc.png?raw=true " ")
 ![](assets/screenshots/sf2.png?raw=true " ")
 ![](assets/screenshots/sm.png?raw=true " ")
 ![](assets/screenshots/starfox.png?raw=true " ")
