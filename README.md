@@ -67,16 +67,22 @@ Most settings can be changed smoothly in the given range. For these settings, an
 | **Setting name**   | Description | **Low vs. high setting**|
 |--------------------|--------------------------------------|----------------|
 | _Shader disabled_  | Input images.                        |![](assets/settings/slider_input.png?raw=true " ")![](assets/settings/orig_crono.jpg?raw=true " ") |
-| Hardness           | How hard the contour of the spot is. | ![](assets/settings/hardness.gif " ")|
+| **Scanline settings** |                                   |                |
 | Min. thickness     | How thick dark parts are rendered.   | ![](assets/settings/min_thickness.gif " ") |
 | Max. thickness     | How thick bright parts are rendered. | ![](assets/settings/max_thickness.gif " ") |
+| Hardness           | How hard the contour of the spot is. | ![](assets/settings/hardness.gif " ")|
 | Spot gamma         | Controls spot thickness's tendency <br>towards thinner or thicker sizes. | ![](assets/settings/spot_gamma.gif " ") |
 | Wideness           | Aspect ratio of the beam.            | ![](assets/settings/wideness.gif " ") |
+| Scanline center    | Sub-pixel alignment of the scanline. <br>This can control scanline sharpness <br>when rendering at lower resolutions. | ![](assets/settings/center1.jpg?raw=true " ") ![](assets/settings/center2.jpg?raw=true " ") |
+| Scanline bleeding  | Allows scanlines to bleed into each <br>other. Necessary for softer spots <br>to be rendered correctly. Turning <br>off provides a performance boost. | Off: ![](assets/settings/nobleed_crono.jpg?raw=true " ") On: ![](assets/settings/bleed_crono.jpg?raw=true " ") |
+| **Mask settings**  |                                      |                |
+| Mask strength      | Strength of the applied mask.        | ![](assets/settings/mask_strength.gif " ") |
+| Mask fineness      | How coarse or fine the pattern is.   | ![](assets/settings/mask_fineness.gif " ") |
+| Mask brightness    | Controls percentage of lit pixels.   | ![](assets/settings/mask_brightness.gif " ") |
+| **Image proc. settings** |                                |                |
+| Erode width        | Horizontally widens darker areas. <br>Can be used to achieve equal width <br>of bright and dark pixels. <br>This is for example important <br>for text readability. | ![](assets/settings/erosion_width.gif " ") |
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/blur_width.gif " ") |
 | Overshoot strength | Overshoot & sharpening strength. <br>Allows the spot size to go beyond <br>the maximum thickness momentarily <br>at the start of a bright part of <br>the scanline.    | ![](assets/settings/overshoot_strength.gif " ") |
-| Erode width        | Horizontally widens darker areas. <br>Can be used to achieve equal width <br>of bright and dark pixels. <br>This is for example important <br>for text readability. | ![](assets/settings/erosion_width.gif " ") |
-| Scanline bleeding  | Allows scanlines to bleed into each <br>other. Necessary for softer spots <br>to be rendered correctly. Turning <br>off provides a performance boost. | ![](assets/settings/nobleed_crono.jpg?raw=true " ") ![](assets/settings/bleed_crono.jpg?raw=true " ")![](assets/settings/bleed_link.jpg?raw=true " ")![](assets/settings/bleed_ness.jpg?raw=true " ") |
-| Scanline center    | Sub-pixel alignment of the scanline. <br>This can control scanline sharpness <br>when rendering at lower resolutions. | ![](assets/settings/center1.jpg?raw=true " ") ![](assets/settings/center2.jpg?raw=true " ") |
 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
