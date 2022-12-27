@@ -40,7 +40,7 @@ If you like to run the shader by default when opening the core, you can set it p
 The following presets are available:
 - `sgs_DEFAULT`: The default preset. Optimized for 240p resolution content on 4k displays. However, it will also work for other input and output resolutions ("freescale" behavior).
 - `sgs_force_*`: These presets sample the input at a fixed resolution according to the file name. This can be used with higher resolution content to achieve a lower resolution look with emphasized scanlines.
-- `sgs_potato_pc`: Same as the default preset, but renders at a lower internal resolution. This should be used if the default preset runs too slow on your computer.
+- `sgs_potato_pc`: Same as the default preset, but renders at a lower internal resolution and disables scanline bleeding. This should be used if the default preset runs too slow on your computer.
 - `sgs_super_high_res`: Same as the default preset, but renders at a much higher resolution. Ideal for running on beefy computers or 8k resolution displays, or for rendering small sprites. May crash on older GPUs that do not support large textures.
 
 ## Ensuring sharp scaling
@@ -52,7 +52,7 @@ Make sure to have the following parameters set in the video settings for the bes
 Despite some optimization efforts, the shader is quite heavy for higher-resolution content. It runs well for 480p and lower resolution content on a laptop GTX 1060.
 However, it might still be too heavy in certain scenarios. You can do the following to increase performance, in decreasing order of impact:
 
-- Switch to the "potato PC" preset. This will render at 5 times the input resolution instead of the default 9x. This runs at several thousand FPS even for higher-resolution content on my laptop GTX 1060.
+- Switch to the "potato PC" preset. This will render at 5 times the input resolution instead of the default 9x. It will also disable scanline bleeding by default. This runs at several thousand FPS even for higher-resolution content on my laptop GTX 1060.
 - Turn off scanline bleeding. This drastically reduces the number of samples required for each pixel and thus improves performance.
 - Any setting that decreases the spot size will increase the performance: Increase hardness, decrease thicknesses, or decrease wideness.
 

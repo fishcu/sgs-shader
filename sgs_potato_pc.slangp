@@ -1,4 +1,8 @@
-shaders = 5
+shaders = 6
+
+# Override default parameters
+parameters = "BLEEDING"
+BLEEDING = "0.0"
 
 shader0 = shaders/srgb_to_linear.slang
 filter_linear0 = false
@@ -28,9 +32,16 @@ scale_x3 = 1.0
 scale_y3 = 5.0
 float_framebuffer3 = true
 
-shader4 = shaders/linear_to_srgb.slang
+shader4 = shaders/mask.slang
 filter_linear4 = false
-scale_type4 = source
+scale_type4 = viewport
 scale_x4 = 1.0
 scale_y4 = 1.0
 float_framebuffer4 = true
+
+shader5 = shaders/linear_to_srgb.slang
+filter_linear5 = false
+scale_type5 = source
+scale_x5 = 1.0
+scale_y5 = 1.0
+float_framebuffer5 = true
