@@ -31,3 +31,35 @@
 #pragma parameter RCAS_STRENGTH "  RCAS_STRENGTH: Strength of RCA sharpening." 0.0 0.0 1.1 0.05
 #pragma parameter RCAS_DENOISE "  RCAS_DENOISE: Suppress luma oversharpening." 1.0 0.0 1.0 1.0
 // clang-format on
+
+//#ifndef EXTRA_FUNCTIONS
+//#define EXTRA_FUNCTIONS
+
+float sqr(float x) { return x * x; }
+
+float dist2(vec2 v, vec2 w) { return sqr(v.x - w.x) + sqr(v.y - w.y); }
+
+float dist_to_segment_squared(vec2 p, vec2 v, vec2 w) {
+    const float l2 = dist2(v, w);
+    if (l2 < 1.0e-8f) {
+        return dist2(p, v);
+    }
+    const float t =
+        clamp(((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2,
+              0.0f, 1.0f);
+    return dist2(p, vec2(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
+}
+
+float dist_to_segment(vec2 p, vec2 v, vec2 w) {
+    return sqrt(dist_to_segment_squared(p, v, w));
+}
+
+float frame_number_to_slider (float number) {
+    const float freq = 1.0f / 120.0f;
+    const float sin_min = 0.2f;
+    const float sin_max = 0.8f;
+    const float s = clamp(sin(number * freq) * 0.5f + 0.5f, sin_min, sin_max);
+    return smoothstep(0.0, 1.0, (s - sin_min) / (sin_max - sin_min)); 
+}
+
+//#endif
