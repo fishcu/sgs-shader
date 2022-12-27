@@ -9,7 +9,7 @@
 
 #pragma parameter MASK_SETTINGS "=== Mask Settings ===" 0.0 0.0 1.0 1.0
 #pragma parameter MASK_STRENGTH "  MASK_STRENGTH: Controls opaqueness of mask." 0.0 0.0 1.0 0.01
-#pragma parameter MASK_FINENESS "  MASK_FINENESS: From coarse to fine." 0.33 0.0 1.0 0.01
+#pragma parameter MASK_FINENESS "  MASK_FINENESS: From coarse to fine." 0.5 0.0 1.0 0.01
 #pragma parameter MASK_BRIGHTNESS "  MASK_BRIGHTNESS: Controls percentage of lit pixels." 0.5 0.0 1.0 0.05
 #pragma parameter MASK_BLUR "  MASK_BLUR: Mask blur width. Relative to mask fineness." 0.15 0.0 1.0 0.05
 #pragma parameter MASK_PATTERN_SIZE "  MASK_PATTERN_SIZE: Cycle length of mask pattern." 48.0 2.0 64.0 1.0

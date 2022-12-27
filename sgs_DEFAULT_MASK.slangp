@@ -2,7 +2,7 @@ shaders = 7
 
 # Override default parameters
 parameters = "MASK_STRENGTH"
-MASK_STRENGTH = "0.3"
+MASK_STRENGTH = "0.5"
 
 shader0 = shaders/srgb_to_linear.slang
 filter_linear0 = false
