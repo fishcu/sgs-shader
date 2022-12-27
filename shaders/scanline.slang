@@ -74,10 +74,7 @@ void sample_scanline(
 void main() {
     const vec2 source_to_output_scale = param.OutputSize.xy * param.SourceSize.zw;
     const float min_thickness = param.MIN_THICKNESS * source_to_output_scale.y * 0.5f;
-
-    const float thickness_slider = mix(0.3f, 1.2f, frame_number_to_slider(float(param.FrameCount)));
-
-    const float max_thickness = thickness_slider * source_to_output_scale.y * 0.5f;
+    const float max_thickness = param.MAX_THICKNESS * source_to_output_scale.y * 0.5f;
     const float scanline_offset = param.SCANLINE_CENTER * param.SourceSize.w;
     const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
     const float gamma_exp = exp(param.SPOT_GAMMA);

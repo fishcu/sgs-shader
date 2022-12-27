@@ -30,7 +30,8 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 float linear_to_srgb(float x) {
-    const float rel_gamma = 1.0f / param.OUTPUT_GAMMA;
+    const float slider = mix(1.8f, 3.5f, frame_number_to_slider(float(param.FrameCount)));
+    const float rel_gamma = 1.0f / slider;
     return x <= 0.0031308 ?
         x * 12.92f :
         1.055f * pow(x, rel_gamma) - 0.055f;
