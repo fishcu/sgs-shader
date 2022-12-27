@@ -73,10 +73,10 @@ Most settings can be changed smoothly in the given range. For these settings, an
 | Spot gamma         | Controls spot thickness's tendency <br>towards thinner or thicker sizes. | ![](assets/settings/spot_gamma.gif " ") |
 | Wideness           | Aspect ratio of the beam.            | ![](assets/settings/wideness.gif " ") |
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/blur_width.gif " ") |
-| Overshoot strength | Overshoot & sharpening strength. Allows the spot size to go beyond the maximum thickness momentarily at the start of a bright part of the scanline.    | ![](assets/settings/overshoot_strength.gif " ") |
-| Erode width        | Horizontally widens darker areas. Can be used to achieve equal width of bright and dark pixels. This is for example important for text readability.                | ![](assets/settings/erosion_width.gif " ") |
-| Scanline bleeding  | Allows scanlines to bleed into each other. Necessary for softer spots to be rendered correctly. Turning off provides a big performance boost.          | ![](assets/settings/nobleed_crono.jpg?raw=true " ") ![](assets/settings/bleed_crono.jpg?raw=true " ")![](assets/settings/bleed_link.jpg?raw=true " ")![](assets/settings/bleed_ness.jpg?raw=true " ") |
-| Scanline center    | Sub-pixel alignment of the scanline. This can control scanline sharpness when rendering at lower resolutions.          | ![](assets/settings/center1.jpg?raw=true " ") ![](assets/settings/center2.jpg?raw=true " ") |
+| Overshoot strength | Overshoot & sharpening strength. <br>Allows the spot size to go beyond <br>the maximum thickness momentarily <br>at the start of a bright <br>part of the scanline.    | ![](assets/settings/overshoot_strength.gif " ") |
+| Erode width        | Horizontally widens darker areas. <br>Can be used to achieve equal width <br>of bright and dark pixels. <br>This is for example important <br>for text readability. | ![](assets/settings/erosion_width.gif " ") |
+| Scanline bleeding  | Allows scanlines to bleed into each <br>other. Necessary for softer spots <br>to be rendered correctly. Turning <br>off provides a big performance boost. | ![](assets/settings/nobleed_crono.jpg?raw=true " ") ![](assets/settings/bleed_crono.jpg?raw=true " ")![](assets/settings/bleed_link.jpg?raw=true " ")![](assets/settings/bleed_ness.jpg?raw=true " ") |
+| Scanline center    | Sub-pixel alignment of the scanline. <br>This can control scanline <br>sharpness when rendering at lower resolutions. | ![](assets/settings/center1.jpg?raw=true " ") ![](assets/settings/center2.jpg?raw=true " ") |
 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
