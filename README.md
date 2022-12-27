@@ -64,7 +64,7 @@ These settings can be changed in the menu at Shaders -> Shader Parameters after 
 
 Most settings can be changed smoothly in the given range. For these settings, animations are shown where the slider overlay shows the current value of the setting in question. 
 
-| **Setting name**   | Description                          | **Low vs. high setting** |
+| **Setting name**   | Description                          | **Low vs. high setting** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |--------------------|--------------------------------------|----------------|
 | _Shader disabled_  | Input images.                        |![](assets/settings/slider_input.png?raw=true " ")![](assets/settings/orig_crono.jpg?raw=true " ") |
 | Hardness           | How hard the contour of the spot is. | ![](assets/settings/hardness.gif " ")|
