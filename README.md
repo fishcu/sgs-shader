@@ -64,14 +64,13 @@ These settings can be changed in the menu at Shaders -> Shader Parameters after 
 
 Most settings can be changed smoothly in the given range. For these settings, animations are shown where the slider overlay shows the current value of the setting in question. 
 
-| **Setting name**   | Description                          | **Low vs. high setting**|
+| **Setting name**   | <div style="width:50px">Description</div> | **Low vs. high setting**|
 |--------------------|--------------------------------------|----------------|
 | _Shader disabled_  | Input images.                        |![](assets/settings/slider_input.png?raw=true " ")![](assets/settings/orig_crono.jpg?raw=true " ") |
 | Hardness           | How hard the contour of the spot is. | ![](assets/settings/hardness.gif " ")|
 | Min. thickness     | How thick dark parts are rendered.   | ![](assets/settings/min_thickness.gif " ") |
 | Max. thickness     | How thick bright parts are rendered. | ![](assets/settings/max_thickness.gif " ") |
-| Spot gamma         | Controls spot thickness's tendency
-towards thinner or thicker sizes. | ![](assets/settings/spot_gamma.gif " ") |
+| Spot gamma         | Controls spot thickness's tendency towards thinner or thicker sizes. | ![](assets/settings/spot_gamma.gif " ") |
 | Wideness           | Aspect ratio of the beam.            | ![](assets/settings/wideness.gif " ") |
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/blur_width.gif " ") |
 | Overshoot strength | Overshoot & sharpening strength. Allows the spot size to go beyond the maximum thickness momentarily at the start of a bright part of the scanline.    | ![](assets/settings/overshoot_strength.gif " ") |
