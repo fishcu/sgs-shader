@@ -79,10 +79,13 @@ Most settings can be changed smoothly in the given range. For these settings, an
 | Mask strength      | Strength of the applied mask.        | ![](assets/settings/mask_strength.gif " ") |
 | Mask fineness      | How coarse or fine the pattern is.   | ![](assets/settings/mask_fineness.gif " ") |
 | Mask brightness    | Controls percentage of lit pixels.   | ![](assets/settings/mask_brightness.gif " ") |
-| **Image proc. settings** |                                |                |
+| **Image processing settings** |                                |                |
 | Erode width        | Horizontally widens darker areas. <br>Can be used to achieve equal width <br>of bright and dark pixels. <br>This is for example important <br>for text readability. | ![](assets/settings/erosion_width.gif " ") |
 | Blur width         | Strength of horizontal blur.         | ![](assets/settings/blur_width.gif " ") |
 | Overshoot strength | Overshoot & sharpening strength. <br>Allows the spot size to go beyond <br>the maximum thickness momentarily <br>at the start of a bright part of <br>the scanline.    | ![](assets/settings/overshoot_strength.gif " ") |
+| **Color settings** |                                      |                |
+| Black point        | Output brightness of black input.    | ![](assets/settings/black_point_off.png?raw=true " ") ![](assets/settings/black_point_on.png?raw=true " ") |
+| Output gamma       | Output gamma correction.             | ![](assets/settings/output_gamma.gif " ") |
 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
