@@ -39,7 +39,7 @@ If you like to run the shader by default when opening the core, you can set it p
 ## Presets explained
 The following presets are available:
 - `sgs_DEFAULT`: The default preset. Optimized for 240p resolution content on 4k displays. However, it will also work for other input and output resolutions ("freescale" behavior).
-- `sgs_force_*`: These presets sample the input at a fixed resolution according to the file name. This can be used with higher resolution content to achieve a lower resolution look with emphasized scanlines. The 320x240 preset works best with 4:3 aspect ratio input, the 640x360 and 427x240 presets work best with 16:9 aspect ratio input.
+- `sgs_force_*`: These presets sample the input at a fixed resolution according to the file name. This can be used with higher resolution content to achieve a lower resolution look with emphasized scanlines.
 - `sgs_potato_pc`: Same as the default preset, but renders at a lower internal resolution. This should be used if the default preset runs too slow on your computer.
 - `sgs_super_high_res`: Same as the default preset, but renders at a much higher resolution. Ideal for running on beefy computers or 8k resolution displays, or for rendering small sprites. May crash on older GPUs that do not support large textures.
 
