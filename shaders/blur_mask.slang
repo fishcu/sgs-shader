@@ -8,6 +8,7 @@ layout(push_constant) uniform Push {
     vec4 OriginalSize;
     vec4 SourceSize;
     uint FrameCount;
+    float MASK_STRENGTH;
     float MASK_PATTERN_SIZE;
     float MASK_FINENESS;
     float MASK_BLUR;
@@ -39,6 +40,11 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 void main() {
+    if (param.MASK_STRENGTH < 1.0e-8f || param.MASK_BLUR < 1.0e-8f) {
+        FragColor = texture(Source, vTexCoord);
+        return;
+    }
+
     const int num_mask_groups = int(mix(1, int(param.MASK_PATTERN_SIZE) / 2, param.MASK_FINENESS));
     const float average_group_width = param.MASK_PATTERN_SIZE / num_mask_groups;
     const float iteration_radius = 1.6f * param.MASK_BLUR * average_group_width;
