@@ -25,5 +25,5 @@
 #pragma parameter OUTPUT_GAMMA "  OUTPUT_GAMMA: Output gamma correction." 2.8 1.0 5.0 0.1
 
 #pragma parameter RCAS_SETTINGS "=== RCA Sharpening Settings ===" 0.0 0.0 1.0 1.0
-#pragma parameter RCAS_STRENGTH "  RCAS_STRENGTH: Strength of RCA sharpening." 0.8 0.0 1.1 0.05
+#pragma parameter RCAS_STRENGTH "  RCAS_STRENGTH: Strength of RCA sharpening." 0.0 0.0 1.1 0.05
 #pragma parameter RCAS_DENOISE "  RCAS_DENOISE: Suppress luma oversharpening." 1.0 0.0 1.0 1.0
