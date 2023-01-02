@@ -1,0 +1,7 @@
+shaders = 1
+
+shader0 = debug.slang
+scale_type0 = source
+scale_x0 = 1.0
+scale_y0 = 8.0
+
