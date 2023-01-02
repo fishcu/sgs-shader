@@ -98,7 +98,7 @@ void main() {
     }
 
     // Pass 2: Sample 2nd-nearest scanline.
-    if(bool(param.BLEEDING)) {
+    if(param.BLEEDING > 0.5f) {
         const float sample_scanline_px = current_scanline
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float dy_px = vTexCoord.y * param.OutputSize.y
