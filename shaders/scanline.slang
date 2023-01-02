@@ -39,7 +39,25 @@ layout(set = 0, binding = 1) uniform sampler2D Source;
 #define _OVERSHOOT_MAX_SIZE 1.3f
 
 float power_gauss(float dx, float dy, float radius_x, float radius_y, float hardness) {
-    return exp(-pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f), hardness));
+    //return exp(-pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f), hardness));
+
+    float idx;
+    const float fract_x = modf(pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f),
+                                 hardness),
+                               idx);
+    // Approximate exp(-x) using piecewise linear function.
+    if (idx >= 7.0f) {
+        return 0.0f;
+    }
+    const float values[8] = {1.0f,
+                             0.36787944117144233f,
+                             0.1353352832366127f,
+                             0.049787068367863944f,
+                             0.01831563888873418f,
+                             0.006737946999085467f,
+                             0.0024787521766663585f,
+                             0.0009118819655545162f};
+    return mix(values[int(idx)], values[int(idx) + 1], fract_x);
 }
 
 // Inverts power_gauss to find dx at which output vanishes
