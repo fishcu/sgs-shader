@@ -46,19 +46,18 @@ int iteration_limit(float dy, float radius_x, float radius_y, float hardness, fl
 }
 
 void sample_scanline(
-        float sample_y_coord,
-        float min_thickness,
-        float max_thickness,
-        float dy_px,
-        int x_sample_radius,
-        sampler2D source,
-        float x_coord,
-        float x_px_to_norm_scale,
-        float effective_hardness,
-        float gamma_exp,
+        in float sample_y_coord,
+        in float min_thickness,
+        in float max_thickness,
+        in float dy_px,
+        in float x_sample_radius,
+        in sampler2D source,
+        in float x_coord,
+        in float x_px_to_norm_scale,
+        in float effective_hardness,
+        in float gamma_exp,
         inout vec3 res) {
-    for(int sample_x_offset_px = -x_sample_radius; sample_x_offset_px <= x_sample_radius; ++sample_x_offset_px) {
-        const float dx_px = sample_x_offset_px;
+    for(float dx_px = -x_sample_radius; dx_px <= x_sample_radius; dx_px += 1.0f) {
         const vec3 sample_color = texture(source,
             vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb;
         for(int c = 0; c < 3; ++c) {
@@ -85,12 +84,12 @@ void main() {
     {
         const float sample_scanline_px = current_scanline + nearest_scanline_offset;
         const float dy_px = vTexCoord.y * param.OutputSize.y
-            - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
-        const int x_sample_radius = iteration_limit(dy_px,
-                                                    max_thickness * param.WIDENESS,
-                                                    max_thickness,
-                                                    effective_hardness,
-                                                    1.0f / 256.0f);
+            - (floor(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
+        const float x_sample_radius = iteration_limit(dy_px,
+                                                      max_thickness * param.WIDENESS,
+                                                      max_thickness,
+                                                      effective_hardness,
+                                                      1.0f / 256.0f);
         sample_scanline(vTexCoord.y + nearest_scanline_offset * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
@@ -100,12 +99,12 @@ void main() {
         const float sample_scanline_px = current_scanline
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float dy_px = vTexCoord.y * param.OutputSize.y
-            - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
-        const int x_sample_radius = iteration_limit(dy_px,
-                                                    max_thickness * param.WIDENESS,
-                                                    max_thickness,
-                                                    effective_hardness,
-                                                    1.0f / 256.0f);
+            - (floor(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
+        const float x_sample_radius = iteration_limit(dy_px,
+                                                      max_thickness * param.WIDENESS,
+                                                      max_thickness,
+                                                      effective_hardness,
+                                                      1.0f / 256.0f);
         sample_scanline(sample_scanline_px * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
