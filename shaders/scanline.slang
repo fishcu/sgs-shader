@@ -58,15 +58,15 @@ void sample_scanline(
         float x_px_to_norm_scale,
         float effective_hardness,
         float gamma_exp,
-        inout vec4 res) {
+        inout vec3 res) {
     for(int sample_x_offset_px = -x_sample_radius; sample_x_offset_px <= x_sample_radius; ++sample_x_offset_px) {
         const float dx_px = sample_x_offset_px;
-        const vec4 sample_color = vec4(texture(source,
-            vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb, 1.0f);
+        const vec3 sample_color = texture(source,
+            vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb;
         for(int c = 0; c < 3; ++c) {
             const float spot_size = signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
             const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
-            res[c] = max(res[c], res[c] * (1.0f - w) + sample_color[c] * w);
+            res[c] = max(res[c], mix(res[c], sample_color[c], w));
         }
     }
 }
@@ -78,7 +78,7 @@ void main() {
     const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
     const float gamma_exp = exp(param.SPOT_GAMMA);
 
-    vec4 res = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    vec3 res = vec3(0.0f, 0.0f, 0.0f);
 
     // Pass 1: Sample nearest scanline.  May be in a different one!
     const float current_scanline = vTexCoord.y * param.SourceSize.y;
@@ -112,5 +112,5 @@ void main() {
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
 
-    FragColor = res;
+    FragColor = vec4(res.r, res.g, res.b, 1.0f);
 }
