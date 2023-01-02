@@ -3,7 +3,7 @@
 #include "parameters.inc"
 #include "signal_to_thickness.inc"
 
-#define _GAUSS_LUT_SIZE 64
+#define _GAUSS_LUT_SIZE 16
 #define LUT_AT(lut, idx) (lut[(idx) / 4][(idx) % 4])
 
 layout(push_constant) uniform Push {
@@ -34,11 +34,13 @@ layout(location = 4) out vec4 gauss_lut[_GAUSS_LUT_SIZE / 4];
 void main() {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
+
+    const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
     lut_extrema[0] = 0.0f;
     lut_extrema[1] = 4.0f;
     for(int i = 0; i < _GAUSS_LUT_SIZE; ++i) {
         const float x = float(i) / (_GAUSS_LUT_SIZE - 1) * (lut_extrema[1] - lut_extrema[0]) + lut_extrema[0];
-        LUT_AT(gauss_lut, i) = exp(-pow(x, 5.225f));
+        LUT_AT(gauss_lut, i) = exp(-pow(x, effective_hardness));
     }
 }
 
@@ -82,10 +84,10 @@ void sample_scanline(
         for(int c = 0; c < 3; ++c) {
             const float spot_size = signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
             
-            const float x = clamp(dx_px * dx_px / (spot_size * param.WIDENESS * spot_size * param.WIDENESS + 1.e-8f)
-                                    + dy_px * dy_px / (spot_size * spot_size + 1.e-8f),
-                                  lut_extrema[0], lut_extrema[1]);
-            const float idx = mix(0, _GAUSS_LUT_SIZE - 2, (x - lut_extrema[0]) / (lut_extrema[1] - lut_extrema[0]));
+            const float x = dx_px * dx_px / (spot_size * param.WIDENESS * spot_size * param.WIDENESS + 1.e-8f)
+                                        + dy_px * dy_px / (spot_size * spot_size + 1.e-8f);
+            const float idx = clamp(mix(0, _GAUSS_LUT_SIZE - 1, (x - lut_extrema[0]) / (lut_extrema[1] - lut_extrema[0])),
+                                        0.0f, _GAUSS_LUT_SIZE - 2);
             const float w = mix(LUT_AT(gauss_lut, int(idx)), LUT_AT(gauss_lut, int(idx) + 1), fract(idx));
             
             // const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
@@ -120,6 +122,30 @@ void main() {
         sample_scanline(vTexCoord.y + nearest_scanline_offset * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res,
                         lut_extrema, gauss_lut);
+        
+        /*
+        for(int sample_x_offset_px = -x_sample_radius; sample_x_offset_px <= x_sample_radius; ++sample_x_offset_px) {
+            const float dx_px = sample_x_offset_px;
+            const vec3 sample_color = texture(Source,
+                vec2(vTexCoord.x + dx_px * param.SourceSize.z, vTexCoord.y + nearest_scanline_offset * param.SourceSize.w)).rgb;
+            
+            for(int c = 0; c < 3; ++c) {
+                const float spot_size = signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+                
+                const float x = dx_px * dx_px / (spot_size * param.WIDENESS * spot_size * param.WIDENESS + 1.e-8f)
+                                        + dy_px * dy_px / (spot_size * spot_size + 1.e-8f);
+                const float idx = clamp(mix(0, _GAUSS_LUT_SIZE - 1, (x - lut_extrema[0]) / (lut_extrema[1] - lut_extrema[0])),
+                                           0.0f, _GAUSS_LUT_SIZE - 2);
+                const float w = mix(LUT_AT(gauss_lut, int(idx)), LUT_AT(gauss_lut, int(idx) + 1), fract(idx));
+
+                // res[c] = max(res[c], sample_color[c]);
+                // res[c] = a;
+                // res[c] = mix(res[c], sample_color[c], w);
+                // res[c] = res[c] * (1.0f - w) + sample_color[c] * w;
+                res[c] = max(res[c], mix(res[c], sample_color[c], w));
+            }
+        }
+        */
     }
 
     // Pass 2: Sample 2nd-nearest scanline.
