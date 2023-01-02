@@ -30,6 +30,10 @@ void main() {
     const float scale_factor = 8.0f;
     const float input_height = 480.0f;
     const float output_height = scale_factor * input_height; 
-    const int brightness = int(vTexCoord.y * output_height) % int(scale_factor);
-    FragColor = texture(Source, vTexCoord) * float(brightness) / scale_factor;
+    // const int brightness = int(vTexCoord.y * output_height) % int(scale_factor);
+    float brightness = vTexCoord.y * output_height;
+    while(brightness >= scale_factor) {
+        brightness -= scale_factor;
+    }
+    FragColor = texture(Source, vTexCoord) * brightness / scale_factor;
 }
