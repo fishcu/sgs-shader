@@ -75,16 +75,10 @@ void main() {
     const vec2 source_to_output_scale = param.OutputSize.xy * param.SourceSize.zw;
     const float min_thickness = param.MIN_THICKNESS * source_to_output_scale.y * 0.5f;
     const float max_thickness = param.MAX_THICKNESS * source_to_output_scale.y * 0.5f;
-    const float scanline_offset = param.SCANLINE_CENTER * param.SourceSize.w;
     const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
     const float gamma_exp = exp(param.SPOT_GAMMA);
 
     vec4 res = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-    // Scales for going from number of pixels in output space to normalized coordinates in
-    // the lookup table (source space + undo vertical stretching).
-    const float x_scale = 1.0f / (2.0f * max(1.0f, param.WIDENESS));
-    const float y_scale = x_scale;
 
     // Pass 1: Sample nearest scanline.  May be in a different one!
     const float current_scanline = vTexCoord.y * param.SourceSize.y;
@@ -92,14 +86,14 @@ void main() {
     const int nearest_scanline_offset = int(2.0f * offset_to_center);
     {
         const float sample_scanline_px = current_scanline + nearest_scanline_offset;
-        const float dy_px = vTexCoord.y * param.OutputSize.y
-            - (int(sample_scanline_px) + param.SCANLINE_CENTER)* source_to_output_scale.y;
+        const int dy_px = int(vTexCoord.y * param.OutputSize.y)
+            - int((int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y);
         const int x_sample_radius = int(iteration_limit(dy_px,
                                                         max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
                                                         max_thickness * _OVERSHOOT_MAX_SIZE,
                                                         effective_hardness,
                                                         1.0f / 64.0f));
-        sample_scanline(sample_scanline_px * param.SourceSize.w, min_thickness, max_thickness, dy_px,
+        sample_scanline(vTexCoord.y + nearest_scanline_offset * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
 
@@ -107,8 +101,8 @@ void main() {
     if(bool(param.BLEEDING)) {
         const float sample_scanline_px = current_scanline
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
-        const float dy_px = vTexCoord.y * param.OutputSize.y
-            - (int(sample_scanline_px) + param.SCANLINE_CENTER)* source_to_output_scale.y;
+        const int dy_px = int(vTexCoord.y * param.OutputSize.y)
+            - int((int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y);
         const int x_sample_radius = int(iteration_limit(dy_px,
                                                         max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
                                                         max_thickness * _OVERSHOOT_MAX_SIZE,

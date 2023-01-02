@@ -36,7 +36,7 @@ void main() {
 
     vec4 res = texture(Source, vTexCoord);
     for(int i = -erosion_radius; i < erosion_radius + int(fract(erosion_radius_f) > 0.5f); ++i) {
-        res = min(res, texture(Source, vTexCoord + vec2((i) * param.OutputSize.z, 0.0f)));
+        res = min(res, texture(Source, vec2(vTexCoord.x + i * param.OutputSize.z, vTexCoord.y)));
     }
 
     FragColor = res;
