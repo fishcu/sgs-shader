@@ -103,19 +103,15 @@ void main() {
             {(coord_x*3 + 0) % pattern_size,
              (coord_x*3 + 1) % pattern_size,
              (coord_x*3 + 2) % pattern_size};
-        FragColor[0] *= attenuate(mask[idx[0]/4][idx[0]%4], offset_to_center,
-            signal_to_thickness(scanline_signal[0], min_radius, max_radius, gamma_exp));
-        FragColor[1] *= attenuate(mask[idx[1]/4][idx[1]%4], offset_to_center,
-            signal_to_thickness(scanline_signal[1], min_radius, max_radius, gamma_exp));
-        FragColor[2] *= attenuate(mask[idx[2]/4][idx[2]%4], offset_to_center,
-            signal_to_thickness(scanline_signal[2], min_radius, max_radius, gamma_exp));
+        for(int c = 0; c < 3; ++c) {
+            FragColor[c] *= attenuate(mask[idx[c] / 4][idx[c] % 4], offset_to_center,
+                signal_to_thickness(scanline_signal[c], min_radius, max_radius, gamma_exp));
+        }
     } else {
         const int idx = coord_x % pattern_size;
-        FragColor[0] *= attenuate(mask[idx/4][idx%4], offset_to_center,
-            signal_to_thickness(scanline_signal[0], min_radius, max_radius, gamma_exp));
-        FragColor[1] *= attenuate(mask[idx/4][idx%4], offset_to_center,
-            signal_to_thickness(scanline_signal[1], min_radius, max_radius, gamma_exp));
-        FragColor[2] *= attenuate(mask[idx/4][idx%4], offset_to_center,
-            signal_to_thickness(scanline_signal[2], min_radius, max_radius, gamma_exp));
+        for(int c = 0; c < 3; ++c) {
+            FragColor[c] *= attenuate(mask[idx / 4][idx % 4], offset_to_center,
+                signal_to_thickness(scanline_signal[c], min_radius, max_radius, gamma_exp));
+        }
     }
 }
