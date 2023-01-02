@@ -97,7 +97,7 @@ void main() {
     const float min_radius = param.MIN_THICKNESS * 0.5f;
     const float max_radius = param.MAX_THICKNESS * 0.5f;
     const float gamma_exp = exp(param.SPOT_GAMMA);
-    if (param.MASK_ENABLE_SUBPIXELS > 0.5f) {
+    if (bool(param.MASK_ENABLE_SUBPIXELS)) {
         const int idx[3] = 
             {(coord_x*3 + 0) % pattern_size,
              (coord_x*3 + 1) % pattern_size,
