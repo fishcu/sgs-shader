@@ -86,8 +86,8 @@ void main() {
     const int nearest_scanline_offset = int(2.0f * offset_to_center);
     {
         const float sample_scanline_px = current_scanline + nearest_scanline_offset;
-        const int dy_px = int(vTexCoord.y * param.OutputSize.y)
-            - int((int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y);
+        const float dy_px = vTexCoord.y * param.OutputSize.y
+            - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
         const int x_sample_radius = int(iteration_limit(dy_px,
                                                         max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
                                                         max_thickness * _OVERSHOOT_MAX_SIZE,
@@ -101,8 +101,8 @@ void main() {
     if(param.BLEEDING > 0.5f) {
         const float sample_scanline_px = current_scanline
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
-        const int dy_px = int(vTexCoord.y * param.OutputSize.y)
-            - int((int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y);
+        const float dy_px = vTexCoord.y * param.OutputSize.y
+            - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
         const int x_sample_radius = int(iteration_limit(dy_px,
                                                         max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
                                                         max_thickness * _OVERSHOOT_MAX_SIZE,
