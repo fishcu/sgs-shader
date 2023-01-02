@@ -36,15 +36,13 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
-#define _OVERSHOOT_MAX_SIZE 1.3f
-
 float power_gauss(float dx, float dy, float radius_x, float radius_y, float hardness) {
     return exp(-pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f), hardness));
 }
 
 // Inverts power_gauss to find dx at which output vanishes
-float iteration_limit(float dy, float radius_x, float radius_y, float hardness, float epsilon) {
-    return radius_x * sqrt(pow(-log(epsilon), 1.0f / hardness) - dy * dy / (radius_y * radius_y + 1.e-8f));
+int iteration_limit(float dy, float radius_x, float radius_y, float hardness, float epsilon) {
+    return int(radius_x * sqrt(pow(-log(epsilon), 1.0f / hardness) - dy * dy / (radius_y * radius_y + 1.e-8f)));
 }
 
 void sample_scanline(
@@ -88,11 +86,11 @@ void main() {
         const float sample_scanline_px = current_scanline + nearest_scanline_offset;
         const float dy_px = vTexCoord.y * param.OutputSize.y
             - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
-        const int x_sample_radius = int(iteration_limit(dy_px,
-                                                        max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
-                                                        max_thickness * _OVERSHOOT_MAX_SIZE,
-                                                        effective_hardness,
-                                                        1.0f / 64.0f));
+        const int x_sample_radius = iteration_limit(dy_px,
+                                                    max_thickness * param.WIDENESS,
+                                                    max_thickness,
+                                                    effective_hardness,
+                                                    1.0f / 256.0f);
         sample_scanline(vTexCoord.y + nearest_scanline_offset * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
@@ -103,11 +101,11 @@ void main() {
             + float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float dy_px = vTexCoord.y * param.OutputSize.y
             - (int(sample_scanline_px) + param.SCANLINE_CENTER) * source_to_output_scale.y;
-        const int x_sample_radius = int(iteration_limit(dy_px,
-                                                        max_thickness * param.WIDENESS * _OVERSHOOT_MAX_SIZE,
-                                                        max_thickness * _OVERSHOOT_MAX_SIZE,
-                                                        effective_hardness,
-                                                        1.0f / 64.0f));
+        const int x_sample_radius = iteration_limit(dy_px,
+                                                    max_thickness * param.WIDENESS,
+                                                    max_thickness,
+                                                    effective_hardness,
+                                                    1.0f / 256.0f);
         sample_scanline(sample_scanline_px * param.SourceSize.w, min_thickness, max_thickness, dy_px,
                         x_sample_radius, Source, vTexCoord.x, param.SourceSize.z, effective_hardness, gamma_exp, res);
     }
