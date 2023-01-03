@@ -1,11 +1,12 @@
-shaders = 3
+shaders = 4
 
 # Override default parameters
-parameters = "HARDNESS;BLUR_WIDTH;SCANLINE_CENTER;BLEEDING"
+parameters = "HARDNESS;BLUR_WIDTH;SCANLINE_STRENGTH;BLEEDING;MASK_STRENGTH"
 HARDNESS = "0.5"
 BLUR_WIDTH = "0.0"
 SCANLINE_CENTER = "0.4"
 BLEEDING = "0.0"
+MASK_STRENGTH = "0.25"
 
 shader0 = shaders/erode.slang
 filter_linear0 = false
@@ -27,3 +28,10 @@ scale_type2 = source
 scale_x2 = 1.0
 scale_y2 = 5.0
 float_framebuffer2 = true
+
+shader3 = shaders/mask.slang
+filter_linear3 = false
+scale_type3 = viewport
+scale_x3 = 1.0
+scale_y3 = 1.0
+float_framebuffer3 = true
