@@ -30,14 +30,9 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 void main() {
-    const vec2 source_to_output_scale = param.OutputSize.xy * param.SourceSize.zw;
-    const float erosion_radius_f = param.EROSION_WIDTH * source_to_output_scale.x * 0.5f;
-    const int erosion_radius = int(erosion_radius_f);
-
-    vec4 res = texture(Source, vTexCoord);
-    for(int i = -erosion_radius; i < erosion_radius + int(fract(erosion_radius_f) > 0.5f); ++i) {
-        res = min(res, texture(Source, vec2(vTexCoord.x + i * param.OutputSize.z, vTexCoord.y)));
+    FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    const float radius = param.EROSION_WIDTH * param.SourceSize.z * 0.5f;
+    for(float sample_x = vTexCoord.x - radius; sample_x <= vTexCoord.x + radius; sample_x += param.OutputSize.z) {
+        FragColor = min(FragColor, texture(Source, vec2(sample_x, vTexCoord.y)));
     }
-
-    FragColor = res;
 }
