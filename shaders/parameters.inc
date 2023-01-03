@@ -17,7 +17,7 @@
 
 #pragma parameter IMAGE_SETTINGS "=== Image Processing Settings ===" 0.0 0.0 1.0 1.0
 #pragma parameter EROSION_WIDTH "  EROSION_WIDTH: Erosion width in pixels." 0.7 0.0 2.0 0.05
-#pragma parameter BLUR_WIDTH "  BLUR_WIDTH: Input horizontal blur width in pixels." 0.15 0.0 4.0 0.05
+#pragma parameter BLUR_WIDTH "  BLUR_WIDTH: Input horizontal blur width in pixels." 0.14 0.0 2.0 0.02
 #pragma parameter OVERSHOOT_STRENGTH "  OVERSHOOT_STRENGTH: Overshooting & sharpening strength." 0.8 0.0 1.0 0.05
 
 #pragma parameter COLOR_SETTINGS "=== Color Settings ===" 0.0 0.0 1.0 1.0
