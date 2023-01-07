@@ -51,24 +51,32 @@ int iteration_limit(float dy, float radius_x, float radius_y, float hardness, fl
                                dy * dy / (radius_y * radius_y + 1.e-8f)));
 }
 
-void sample_scanline(
-        in float sample_y_coord,
-        in float min_thickness,
-        in float max_thickness,
-        in float dy_px,
-        in float x_sample_radius,
-        in sampler2D source,
-        in float x_coord,
-        in float x_px_to_norm_scale,
-        in float effective_hardness,
-        in float gamma_exp,
-        inout vec3 res) {
-    for(float dx_px = -x_sample_radius; dx_px <= x_sample_radius; dx_px += 1.0f) {
-        const vec3 sample_color = texture(source,
-            vec2(x_coord + dx_px * x_px_to_norm_scale, sample_y_coord)).rgb;
-        for(int c = 0; c < 3; ++c) {
-            const float spot_size = signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
-            const float w = power_gauss(dx_px, dy_px, spot_size * param.WIDENESS, spot_size, effective_hardness);
+void sample_scanline(in vec2 viewport_sample, in float viewport_dy, in float min_thickness,
+                     in float max_thickness, in float viewport_sample_x_radius,
+                     in float effective_hardness, in float gamma_exp, in sampler2D source,
+                     inout vec3 res) {
+    // Only sample from scanline signal pass if value can possible have changed given the
+    // resolution.
+    // const float sampling_pixels_per_step = param.ScanlineSignalSize.x * param.OutputSize.z;
+    // vec3 sample_color =
+    //     texture(source, vec2(viewport_sample.x - viewport_sample_x_radius * param.OutputSize.z,
+    //                          viewport_sample.y))
+    //         .rgb;
+    // float sampling_error = 0.0f;
+    for (float viewport_dx = -viewport_sample_x_radius; viewport_dx <= viewport_sample_x_radius;
+         viewport_dx += 1.0 /*, sampling_error += sampling_pixels_per_step*/) {
+        // if (sampling_error >= 1.0f) {
+        const vec3 sample_color =
+            texture(source,
+                    vec2(viewport_sample.x + viewport_dx * param.OutputSize.z, viewport_sample.y))
+                .rgb;
+        //     sampling_error -= 1.0f;
+        // }
+        for (int c = 0; c < 3; ++c) {
+            const float spot_size =
+                signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+            const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
+                                        spot_size, effective_hardness);
             res[c] = max(res[c], mix(res[c], sample_color[c], w));
         }
     }
