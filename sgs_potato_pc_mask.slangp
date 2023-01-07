@@ -1,10 +1,11 @@
-shaders = 4
+shaders = 3
 
 # Override default parameters
-parameters = "HARDNESS;BLUR_WIDTH;SCANLINE_STRENGTH;BLEEDING;MASK_STRENGTH"
-HARDNESS = "0.5"
-BLUR_WIDTH = "0.0"
-SCANLINE_CENTER = "0.4"
+parameters = "HARDNESS;MAX_THICKNESS;SPOT_GAMMA;SCANLINE_CENTER;BLEEDING;MASK_STRENGTH"
+HARDNESS = "1.0"
+MAX_THICKNESS = "0.85"
+SPOT_GAMMA = "0.0"
+SCANLINE_CENTER = "0.5"
 BLEEDING = "0.0"
 MASK_STRENGTH = "0.25"
 
@@ -15,23 +16,16 @@ scale_x0 = 5.0
 scale_y0 = 1.0
 float_framebuffer0 = true
 
-shader1 = shaders/blur_input_horiz.slang
-filter_linear1 = true
-scale_type1 = source
+shader1 = shaders/scanline.slang
+filter_linear1 = false
+scale_type1 = viewport
 scale_x1 = 1.0
 scale_y1 = 1.0
 float_framebuffer1 = true
 
-shader2 = shaders/scanline.slang
+shader2 = shaders/mask.slang
 filter_linear2 = false
-scale_type2 = source
+scale_type2 = viewport
 scale_x2 = 1.0
-scale_y2 = 5.0
+scale_y2 = 1.0
 float_framebuffer2 = true
-
-shader3 = shaders/mask.slang
-filter_linear3 = false
-scale_type3 = viewport
-scale_x3 = 1.0
-scale_y3 = 1.0
-float_framebuffer3 = true
