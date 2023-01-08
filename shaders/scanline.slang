@@ -40,15 +40,12 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 float power_gauss(float dx, float dy, float radius_x, float radius_y, float hardness) {
-    return exp(
-        -pow(dx * dx / (radius_x * radius_x + 1.e-8f) + dy * dy / (radius_y * radius_y + 1.e-8f),
-             hardness));
+    return exp(-pow(dx * dx / (radius_x * radius_x) + dy * dy / (radius_y * radius_y), hardness));
 }
 
 // Inverts power_gauss to find dx at which output vanishes, i.e., falls below epsilon.
 float iteration_limit(float dy, float radius_x, float radius_y, float hardness, float epsilon) {
-    return radius_x * sqrt(pow(-log(epsilon), 1.0f / hardness) -
-                               dy * dy / (radius_y * radius_y + 1.e-8f));
+    return radius_x * sqrt(pow(-log(epsilon), 1.0f / hardness) - dy * dy / (radius_y * radius_y));
 }
 
 void sample_scanline(in vec2 unit_sample, in float unit_dy, in float min_thickness,
@@ -109,8 +106,11 @@ void main() {
         // coordinates.
         const float unit_dy = vTexCoord.y - (scanline_sample_y_int + param.SCANLINE_CENTER) *
                                                 param.ScanlineSignalSize.w;
-        const float unit_sample_radius_x = iteration_limit(unit_dy, unit_radius_x, max_thickness,
-                                                           effective_hardness, 1.0f / 256.0f);
+        const float unit_sample_radius_x =
+            floor(iteration_limit(unit_dy, unit_radius_x, max_thickness, effective_hardness,
+                                  1.0f / 256.0f) *
+                  param.OutputSize.x) *
+            param.OutputSize.z;
         sample_scanline(
             vec2(vTexCoord.x, vTexCoord.y + nearest_scanline_offset * param.ScanlineSignalSize.w),
             unit_dy, min_thickness, max_thickness, unit_sample_radius_x, effective_hardness,
@@ -126,8 +126,11 @@ void main() {
             float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float unit_dy = vTexCoord.y - (floor(scanline_sample_y_f) + param.SCANLINE_CENTER) *
                                                 param.ScanlineSignalSize.w;
-        const float unit_sample_radius_x = iteration_limit(unit_dy, unit_radius_x, max_thickness,
-                                                           effective_hardness, 1.0f / 256.0f);
+        const float unit_sample_radius_x =
+            floor(iteration_limit(unit_dy, unit_radius_x, max_thickness, effective_hardness,
+                                  1.0f / 256.0f) *
+                  param.OutputSize.x) *
+            param.OutputSize.z;
         sample_scanline(vec2(vTexCoord.x, scanline_sample_y_f * param.ScanlineSignalSize.w),
                         unit_dy, min_thickness, max_thickness, unit_sample_radius_x,
                         effective_hardness, gamma_exp, Source, res);
