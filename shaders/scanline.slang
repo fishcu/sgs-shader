@@ -55,17 +55,31 @@ void sample_scanline(in vec2 viewport_sample, in float viewport_dy, in float min
                      in float max_thickness, in float viewport_sample_x_radius,
                      in float effective_hardness, in float gamma_exp, in sampler2D source,
                      inout vec3 res) {
+    // Sub-pixel location within the scanline signal pass where the last sample was.
+    // If the offset is above 1, we need to fetch another texture sample.
+    // Add 1 to the initial value to trigger the first sample immediately.
+    float signal_offset =
+        fract((viewport_sample.x - viewport_sample_x_radius * param.OutputSize.z) *
+              param.ScanlineSignalSize.x) +
+        1.0f;
+    vec3 sample_color;
+    vec3 spot_size;
     for (float viewport_dx = -viewport_sample_x_radius; viewport_dx <= viewport_sample_x_radius;
-         viewport_dx += 1.0) {
-        const vec3 sample_color =
-            texture(source,
-                    vec2(viewport_sample.x + viewport_dx * param.OutputSize.z, viewport_sample.y))
-                .rgb;
+         viewport_dx += 1.0, signal_offset += param.ScanlineSignalSize.x * param.OutputSize.z) {
+        if (signal_offset >= 1.0f) {
+            sample_color =
+                texture(source, vec2(viewport_sample.x + viewport_dx * param.OutputSize.z,
+                                     viewport_sample.y))
+                    .rgb;
+            for (int c = 0; c < 3; ++c) {
+                spot_size[c] =
+                    signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+            }
+            signal_offset -= 1.0f;
+        }
         for (int c = 0; c < 3; ++c) {
-            const float spot_size =
-                signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
-            const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
-                                        spot_size, effective_hardness);
+            const float w = power_gauss(viewport_dx, viewport_dy, spot_size[c] * param.WIDENESS,
+                                        spot_size[c], effective_hardness);
             res[c] = max(res[c], mix(res[c], sample_color[c], w));
         }
     }
