@@ -163,16 +163,16 @@ void main() {
     if (bool(param.BLEEDING)) {
         // The 2nd scanline that will be sampled. Relative to the direction from the current
         // coordinate to the nearest scanline, this goes into the opposite direction.
-        const float scanline_sample_y_int =
-            scanline_tex_y_int +
+        const float scanline_sample_y_f =
+            vTexCoord.y * param.SourceSize.y +
             float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float viewport_dy =
             vTexCoord.y * param.OutputSize.y -
-            (scanline_sample_y_int + param.SCANLINE_CENTER) * orig_to_viewport_scale.y;
+            (floor(scanline_sample_y_f) + param.SCANLINE_CENTER) * orig_to_viewport_scale.y;
         const float viewport_sample_x_radius = iteration_limit(
             viewport_dy, param.MAX_THICKNESS * orig_to_viewport_scale.x * 0.5f * param.WIDENESS,
             max_thickness, effective_hardness, 1.0f / 256.0f);
-        sample_scanline(vec2(vTexCoord.x, scanline_sample_y_int * param.OriginalSize.w),
+        sample_scanline(vec2(vTexCoord.x, scanline_sample_y_f * param.OriginalSize.w),
                         viewport_dy, min_thickness, max_thickness, viewport_sample_x_radius,
                         effective_hardness, gamma_exp, Source, res);
     }
