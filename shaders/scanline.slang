@@ -1,6 +1,6 @@
 #version 450
 
-#include "parameters.inc"
+#include "parameters.slang"
 #include "signal_to_thickness.inc"
 
 layout(push_constant) uniform Push {

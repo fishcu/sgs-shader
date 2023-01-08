@@ -1,6 +1,6 @@
 #version 450
 
-#include "parameters.inc"
+#include "parameters.slang"
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;

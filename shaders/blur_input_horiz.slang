@@ -1,6 +1,6 @@
 #version 450
 
-#include "parameters.inc"
+#include "parameters.slang"
 #include "blur_horiz.slang"
 
 layout(push_constant) uniform Push {

@@ -1,6 +1,6 @@
 #version 450
 
-#include "parameters.inc"
+#include "parameters.slang"
 
 #pragma name ScanlineSignal
 

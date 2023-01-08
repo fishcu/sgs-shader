@@ -1,6 +1,6 @@
 #version 450
 
-#include "parameters.inc"
+#include "parameters.slang"
 #include "signal_to_thickness.inc"
 
 layout(push_constant) uniform Push {
@@ -21,7 +21,6 @@ layout(push_constant) uniform Push {
 param;
 
 #define MAX_MASK_PATTERN_SIZE 64
-// #define MASK_PATTERN_SIZE 60
 
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;
@@ -101,7 +100,7 @@ void main() {
                              (floor(vTexCoord.y * param.OriginalSize.y) + param.SCANLINE_CENTER) *
                                  orig_to_viewport_scale.y))
             .rgb;
-            
+
     const int coord_x = int(vTexCoord.x * param.OutputSize.x);
     const int pattern_size = int(param.MASK_PATTERN_SIZE);
 
