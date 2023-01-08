@@ -131,7 +131,7 @@ void main() {
         const float viewport_dy =
             vTexCoord.y * param.OutputSize.y -
             (floor(scanline_sample_y_f) + param.SCANLINE_CENTER) * orig_to_viewport_scale_y;
-        const float viewport_sample_x_radius = floor( iteration_limit(
+        const float viewport_sample_x_radius = floor(iteration_limit(
             viewport_dy,
             param.MAX_THICKNESS * param.OutputSize.x * param.OriginalSize.z * 0.5f * param.WIDENESS,
             max_thickness, effective_hardness, 1.0f / 256.0f));

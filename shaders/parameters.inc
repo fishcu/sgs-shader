@@ -3,7 +3,7 @@
 #pragma parameter MAX_THICKNESS "  MAX_THICKNESS: Scanline thickness of bright pixels." 0.9 0.0 1.4 0.01
 #pragma parameter HARDNESS "  HARDNESS: Hardness of the spot." 0.65 0.0 2.0 0.05
 #pragma parameter SPOT_GAMMA "  SPOT_GAMMA: Shape spot size curve. Affects brightness." -0.6 -3.0 3.0 0.1
-#pragma parameter WIDENESS "  WIDENESS: Shape wideness of the spot. 1 is a circle." 0.95 0.0 3.0 0.05
+#pragma parameter WIDENESS "  WIDENESS: Shape wideness of the spot. 1 is a circle." 0.95 0.00000001 3.0 0.05
 #pragma parameter SCANLINE_CENTER "  SCANLINE_CENTER: Vertical position within the pixel." 0.55 0.0 1.0 0.01
 #pragma parameter BLEEDING "  BLEEDING: Allow scanlines to bleed into each other." 1.0 0.0 1.0 1.0
 
