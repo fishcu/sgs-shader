@@ -55,23 +55,12 @@ void sample_scanline(in vec2 viewport_sample, in float viewport_dy, in float min
                      in float max_thickness, in float viewport_sample_x_radius,
                      in float effective_hardness, in float gamma_exp, in sampler2D source,
                      inout vec3 res) {
-    // Only sample from scanline signal pass if value can possible have changed given the
-    // resolution.
-    // const float sampling_pixels_per_step = param.ScanlineSignalSize.x * param.OutputSize.z;
-    // vec3 sample_color =
-    //     texture(source, vec2(viewport_sample.x - viewport_sample_x_radius * param.OutputSize.z,
-    //                          viewport_sample.y))
-    //         .rgb;
-    // float sampling_error = 0.0f;
     for (float viewport_dx = -viewport_sample_x_radius; viewport_dx <= viewport_sample_x_radius;
-         viewport_dx += 1.0 /*, sampling_error += sampling_pixels_per_step*/) {
-        // if (sampling_error >= 1.0f) {
+         viewport_dx += 1.0) {
         const vec3 sample_color =
             texture(source,
                     vec2(viewport_sample.x + viewport_dx * param.OutputSize.z, viewport_sample.y))
                 .rgb;
-        //     sampling_error -= 1.0f;
-        // }
         for (int c = 0; c < 3; ++c) {
             const float spot_size =
                 signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
@@ -80,6 +69,56 @@ void sample_scanline(in vec2 viewport_sample, in float viewport_dy, in float min
             res[c] = max(res[c], mix(res[c], sample_color[c], w));
         }
     }
+    /*
+// Sample at the current pixel -- closest dx is simply zero.
+{
+const vec3 sample_color = texture(source, vec2(viewport_sample.x, viewport_sample.y)).rgb;
+const float viewport_dx = 0.0f;
+for (int c = 0; c < 3; ++c) {
+const float spot_size =
+signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
+                    spot_size, effective_hardness);
+res[c] = max(res[c], mix(res[c], sample_color[c], w));
+// res[c] = max(res[c], sample_color[c] * w);
+}
+}
+
+// Samples to the left of this pixel are sampled as far right as possible for maximum effect.
+const float step = param.ScanlineSignalSize.z;
+for (float dx = -viewport_sample_x_radius * param.OutputSize.z; dx < 0.0f; dx += step) {
+const float sample_x = viewport_sample.x + dx;
+const vec3 sample_color = texture(source, vec2(sample_x, viewport_sample.y)).rgb;
+const float viewport_dx =
+param.OutputSize.x * (viewport_sample.x - ceil(sample_x * param.ScanlineSignalSize.x) *
+                                      param.ScanlineSignalSize.z);
+for (int c = 0; c < 3; ++c) {
+const float spot_size =
+signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
+                    spot_size, effective_hardness);
+res[c] = max(res[c], mix(res[c], sample_color[c], w));
+// res[c] = max(res[c], sample_color[c] * w);
+}
+}
+// Samples to the right of this pixel are sampled as far left as possible.
+for (float dx = viewport_sample_x_radius * param.OutputSize.z; dx > 0.0f; dx -= step) {
+const float sample_x = viewport_sample.x + dx;
+const vec3 sample_color = texture(source, vec2(sample_x, viewport_sample.y)).rgb;
+const float viewport_dx =
+param.OutputSize.x *
+(floor(sample_x * param.ScanlineSignalSize.x) * param.ScanlineSignalSize.z -
+viewport_sample.x);
+for (int c = 0; c < 3; ++c) {
+const float spot_size =
+signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
+const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
+                    spot_size, effective_hardness);
+res[c] = max(res[c], mix(res[c], sample_color[c], w));
+// res[c] = max(res[c], sample_color[c] * w);
+}
+}
+*/
 }
 
 void main() {
