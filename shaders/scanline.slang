@@ -83,64 +83,14 @@ void sample_scanline(in vec2 viewport_sample, in float viewport_dy, in float min
             res[c] = max(res[c], mix(res[c], sample_color[c], w));
         }
     }
-    /*
-// Sample at the current pixel -- closest dx is simply zero.
-{
-const vec3 sample_color = texture(source, vec2(viewport_sample.x, viewport_sample.y)).rgb;
-const float viewport_dx = 0.0f;
-for (int c = 0; c < 3; ++c) {
-const float spot_size =
-signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
-const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
-                    spot_size, effective_hardness);
-res[c] = max(res[c], mix(res[c], sample_color[c], w));
-// res[c] = max(res[c], sample_color[c] * w);
-}
-}
-
-// Samples to the left of this pixel are sampled as far right as possible for maximum effect.
-const float step = param.ScanlineSignalSize.z;
-for (float dx = -viewport_sample_x_radius * param.OutputSize.z; dx < 0.0f; dx += step) {
-const float sample_x = viewport_sample.x + dx;
-const vec3 sample_color = texture(source, vec2(sample_x, viewport_sample.y)).rgb;
-const float viewport_dx =
-param.OutputSize.x * (viewport_sample.x - ceil(sample_x * param.ScanlineSignalSize.x) *
-                                      param.ScanlineSignalSize.z);
-for (int c = 0; c < 3; ++c) {
-const float spot_size =
-signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
-const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
-                    spot_size, effective_hardness);
-res[c] = max(res[c], mix(res[c], sample_color[c], w));
-// res[c] = max(res[c], sample_color[c] * w);
-}
-}
-// Samples to the right of this pixel are sampled as far left as possible.
-for (float dx = viewport_sample_x_radius * param.OutputSize.z; dx > 0.0f; dx -= step) {
-const float sample_x = viewport_sample.x + dx;
-const vec3 sample_color = texture(source, vec2(sample_x, viewport_sample.y)).rgb;
-const float viewport_dx =
-param.OutputSize.x *
-(floor(sample_x * param.ScanlineSignalSize.x) * param.ScanlineSignalSize.z -
-viewport_sample.x);
-for (int c = 0; c < 3; ++c) {
-const float spot_size =
-signal_to_thickness(sample_color[c], min_thickness, max_thickness, gamma_exp);
-const float w = power_gauss(viewport_dx, viewport_dy, spot_size * param.WIDENESS,
-                    spot_size, effective_hardness);
-res[c] = max(res[c], mix(res[c], sample_color[c], w));
-// res[c] = max(res[c], sample_color[c] * w);
-}
-}
-*/
 }
 
 void main() {
     // How many pixels there are in the output per pixels in the input.
-    const vec2 orig_to_viewport_scale = param.OutputSize.xy * param.OriginalSize.zw;
+    const float orig_to_viewport_scale_y = param.OutputSize.y * param.ScanlineSignalSize.w;
     // Gives as radius in viewport pixel scaling.
-    const float min_thickness = param.MIN_THICKNESS * orig_to_viewport_scale.y * 0.5f;
-    const float max_thickness = param.MAX_THICKNESS * orig_to_viewport_scale.y * 0.5f;
+    const float min_thickness = param.MIN_THICKNESS * orig_to_viewport_scale_y * 0.5f;
+    const float max_thickness = param.MAX_THICKNESS * orig_to_viewport_scale_y * 0.5f;
     const float effective_hardness = param.HARDNESS * param.HARDNESS * 10.0f + 1.0f;
     const float gamma_exp = exp(param.SPOT_GAMMA);
 
@@ -148,12 +98,12 @@ void main() {
 
     // Pass 1: Sample nearest scanline.  May be in a different one!
     // Pixel y coordinate in input pixel space, e.g., 13.0 for
-    // vTexCoord.y * param.OriginalSize.y == 13.57.
+    // vTexCoord.y * param.ScanlineSignalSize.y == 13.57.
     float scanline_tex_y_int;
     // Offset to scanline center in input pixel space, e.g., 0.07 for
-    // vTexCoord.y * param.OriginalSize.y == 13.57 and scanline center == 0.5.
+    // vTexCoord.y * param.ScanlineSignalSize.y == 13.57 and scanline center == 0.5.
     const float offset_to_center =
-        modf(vTexCoord.y * param.OriginalSize.y, scanline_tex_y_int) - param.SCANLINE_CENTER;
+        modf(vTexCoord.y * param.ScanlineSignalSize.y, scanline_tex_y_int) - param.SCANLINE_CENTER;
     // Integer offset to scanline y coordinate in input pixel space, e.g., -1, 0, or 1.
     const int nearest_scanline_offset = int(2.0f * offset_to_center);
     {
@@ -163,12 +113,13 @@ void main() {
         // coordinates.
         const float viewport_dy =
             vTexCoord.y * param.OutputSize.y -
-            (scanline_sample_y_int + param.SCANLINE_CENTER) * orig_to_viewport_scale.y;
+            (scanline_sample_y_int + param.SCANLINE_CENTER) * orig_to_viewport_scale_y;
         const float viewport_sample_x_radius = iteration_limit(
-            viewport_dy, param.MAX_THICKNESS * orig_to_viewport_scale.x * 0.5f * param.WIDENESS,
+            viewport_dy,
+            param.MAX_THICKNESS * param.OutputSize.x * param.OriginalSize.z * 0.5f * param.WIDENESS,
             max_thickness, effective_hardness, 1.0f / 256.0f);
         sample_scanline(
-            vec2(vTexCoord.x, vTexCoord.y + nearest_scanline_offset * param.OriginalSize.w),
+            vec2(vTexCoord.x, vTexCoord.y + nearest_scanline_offset * param.ScanlineSignalSize.w),
             viewport_dy, min_thickness, max_thickness, viewport_sample_x_radius, effective_hardness,
             gamma_exp, Source, res);
     }
@@ -182,11 +133,12 @@ void main() {
             float(!bool(nearest_scanline_offset % 2)) * (offset_to_center >= 0.0f ? 1.0f : -1.0f);
         const float viewport_dy =
             vTexCoord.y * param.OutputSize.y -
-            (floor(scanline_sample_y_f) + param.SCANLINE_CENTER) * orig_to_viewport_scale.y;
+            (floor(scanline_sample_y_f) + param.SCANLINE_CENTER) * orig_to_viewport_scale_y;
         const float viewport_sample_x_radius = iteration_limit(
-            viewport_dy, param.MAX_THICKNESS * orig_to_viewport_scale.x * 0.5f * param.WIDENESS,
+            viewport_dy,
+            param.MAX_THICKNESS * param.OutputSize.x * param.OriginalSize.z * 0.5f * param.WIDENESS,
             max_thickness, effective_hardness, 1.0f / 256.0f);
-        sample_scanline(vec2(vTexCoord.x, scanline_sample_y_f * param.OriginalSize.w),
+        sample_scanline(vec2(vTexCoord.x, scanline_sample_y_f * param.ScanlineSignalSize.w),
                         viewport_dy, min_thickness, max_thickness, viewport_sample_x_radius,
                         effective_hardness, gamma_exp, Source, res);
     }
