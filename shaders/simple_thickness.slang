@@ -1,20 +1,24 @@
 #version 450
 
 // clang-format off
-#pragma parameter MIN_THICKNESS "Scanline thickness of dark pixels." 0.3 0.0 1.0 0.05
-#pragma parameter MAX_THICKNESS "Scanline thickness of bright pixels." 0.9 0.0 1.4 0.05
-#pragma parameter V_SHARP "Vertical sharpness of the scanline" 0.5 0.0 1.0 0.05
-#pragma parameter H_SHARP "Horizontal sharpness of pixel transitions." 0.5 0.0 1.0 0.05
+#pragma parameter MIN_THICK "MIN_THICK: Scanline thickness of dark pixels." 0.25 0.0 1.4 0.05
+#pragma parameter MAX_THICK "MAX_THICK: Scanline thickness of bright pixels." 1.05 0.0 1.4 0.05
+#pragma parameter V_SHARP "V_SHARP: Vertical sharpness of the scanline" 0.2 0.0 1.0 0.05
+#pragma parameter H_SHARP "H_SHARP: Horizontal sharpness of pixel transitions." 0.15 0.0 1.0 0.05
+#pragma parameter SUBPX_POS "SUBPX_POS: Scanline subpixel position." 0.05 -0.5 0.5 0.01
+#pragma parameter THICK_FALLOFF "THICK_FALLOFF: Reduction of thinner scanlines." 0.85 0.2 2.0 0.05
 // clang-format on
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;
     vec4 SourceSize;
     uint FrameCount;
-    float MIN_THICKNESS;
-    float MAX_THICKNESS;
+    float MIN_THICK;
+    float MAX_THICK;
     float V_SHARP;
     float H_SHARP;
+    float SUBPX_POS;
+    float THICK_FALLOFF;
 }
 param;
 
@@ -37,58 +41,41 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D Original;
 
-float gain(float x, float k) {
-    x = clamp(x, 0.0, 1.0);
-    const float s = sign(x - 0.5);
-    const float o = (1.0 + s) / 2.0;
-    return o - 0.5 * s * pow(2.0 * (o - s * x), k);
-}
-
-float aa(float x) { return clamp(x * 10.0f, 0.0f, 1.0f); }
-
 void main() {
-    float eff_v_sharp = 5.0f + 100.0f * param.V_SHARP * param.V_SHARP;
+    
 
     float src_x_int;
-    const float src_x_fract = modf(vTexCoord.x * param.SourceSize.x, src_x_int);
+    const float src_x_fract =
+        modf(vTexCoord.x * param.SourceSize.x - 0.5f, src_x_int);
 
     float src_y_int;
-    const float src_y_fract = modf(vTexCoord.y * param.SourceSize.y, src_y_int);
+    const float src_y_fract =
+        modf(vTexCoord.y * param.SourceSize.y - param.SUBPX_POS, src_y_int);
 
-    FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    // const float src_x_fract_shf =
-    //     clamp((src_x_fract - 0.5f) * 1.0f, -0.5f, 0.5f);
-    // const float src_x =
-    //     src_x_int + clamp(sign(src_x_fract_shf) *
-    //                           pow(abs(src_x_fract_shf) * 2.0f, 0.5f) * 0.5f,
-    //                       -0.5f, 0.5f);
-    // const float src_x = src_x_int + clamp(src_x_fract_shf * 2.0f, -0.5f,
-    // 0.5f);
-    // const float src_x =
-    //     src_x_int + sign(src_x_fract_shf) *
-    //                     sqrt(-src_x_fract_shf * src_x_fract_shf +
-    //                          sign(src_x_fract_shf) * src_x_fract_shf) + 1.0f;
-    // const float src_x =
-    //     src_x_int + smoothstep(-0.5f, 0.5f, src_x_fract_shf * 1.0f) + 0.5f;
+    // Function similar to smoothstep and sigmoid.
+    const float s = sign(src_x_fract - 0.5f);
+    const float o = (1.0f + s) * 0.5f;
     const float src_x =
-        src_x_int + gain(src_x_fract, mix(1.5f, 10.0f, param.H_SHARP)) + 0.5f;
+        src_x_int + o -
+        0.5f * s *
+            pow(2.0f * (o - s * src_x_fract), mix(1.5f, 10.0f, param.H_SHARP));
 
-    const vec3 signal =
-        texture(Source, vec2(src_x * param.SourceSize.z,
-                             (src_y_int + 0.5f) * param.SourceSize.w))
-            .rgb;
-    // for (int c = 0; c < 3; ++c) {
-    //     if (abs(src_y_fract - 0.5f) < signal[c] * 0.4f) {
-    //         FragColor[c] = signal[c];
-    //     }
-    // }
-    for (int c = 0; c < 3; ++c) {
-        FragColor[c] =
-            mix(0.0f, signal[c],
-                clamp(eff_v_sharp * ((mix(param.MIN_THICKNESS,
-                                          param.MAX_THICKNESS, signal[c]) *
-                                      0.5f) -
-                                     abs(src_y_fract - 0.5f)),
-                      0.0f, 1.0f));
-    }
+    const vec4 signal =
+        texture(Source, vec2((src_x + 0.5f) * param.SourceSize.z,
+                             (src_y_int + 0.5f) * param.SourceSize.w));
+
+    // Vectorize operations for speed
+    const float eff_v_sharp = 5.0f + 100.0f * param.V_SHARP * param.V_SHARP;
+    const vec4 min_thick = {param.MIN_THICK, param.MIN_THICK, param.MIN_THICK,
+                            param.MIN_THICK};
+    const vec4 max_thick = {param.MAX_THICK, param.MAX_THICK, param.MAX_THICK,
+                            param.MAX_THICK};
+    const vec4 thick_falloff = {param.THICK_FALLOFF, param.THICK_FALLOFF,
+                                param.THICK_FALLOFF, param.THICK_FALLOFF};
+    FragColor =
+        signal * clamp(eff_v_sharp * ((pow(mix(min_thick, max_thick, signal),
+                                           thick_falloff) *
+                                       0.5f) -
+                                      abs(src_y_fract - 0.5f)),
+                       0.0f, 1.0f);
 }
