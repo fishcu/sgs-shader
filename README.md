@@ -86,6 +86,9 @@ Most settings can be changed smoothly in the given range. For these settings, an
 | **Color settings** |                                      |                |
 | Black point        | Output brightness of black input.    | ![](assets/settings/black_point_off.png?raw=true " ") ![](assets/settings/black_point_on.png?raw=true " ") |
 | Output gamma       | Output gamma correction.             | ![](assets/settings/output_gamma.gif " ") |
+| **RCA Sharpening settings** |                             |                |
+| RCAS strength      | Strength of sharpening applied.      | ![](assets/settings/rcas.gif " ") |
+| RCAS denoise       | Enable RCAS noise suppression. <br>It's recommended to leave this on <br>to avoid artifacts. | ![](assets/settings/rcas_denoise_off.png?raw=true " ") ![](assets/settings/rcas_denoise_on.png?raw=true " ") |
 
 # Full-size screenshots
 All of these screenshots use default shader parameters.
