@@ -18,6 +18,5 @@ float_framebuffer0 = true
 shader1 = shaders/scanline.slang
 filter_linear1 = false
 scale_type1 = viewport
-scale_x1 = 1.0
-scale_y1 = 1.0
+scale1 = 1.0
 float_framebuffer1 = true
