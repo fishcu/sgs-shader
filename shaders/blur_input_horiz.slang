@@ -1,7 +1,7 @@
 #version 450
 
-#include "parameters.slang"
 #include "blur_horiz.slang"
+#include "parameters.slang"
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;
@@ -11,11 +11,13 @@ layout(push_constant) uniform Push {
     float BLUR_WIDTH;
     float OVERSHOOT_STRENGTH;
     float BLACK_POINT;
-} param;
+}
+param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;
-} global;
+}
+global;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -37,6 +39,5 @@ void main() {
                param.SourceSize.z, Source, vTexCoord, FragColor);
 
     // Prevent black point from being undercut.
-    FragColor = max(0.1f * vec4(param.BLACK_POINT, param.BLACK_POINT, param.BLACK_POINT, 0.0f),
-                    FragColor);
+    FragColor = max(0.1 * vec4(vec3(param.BLACK_POINT), 0.0), FragColor);
 }

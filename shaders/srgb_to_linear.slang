@@ -8,11 +8,13 @@ layout(push_constant) uniform Push {
     vec4 SourceSize;
     uint FrameCount;
     float BLACK_POINT;
-} param;
+}
+param;
 
 layout(std140, set = 0, binding = 0) uniform UBO {
     mat4 MVP;
-} global;
+}
+global;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -30,15 +32,14 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Original;
 
 float srgb_to_linear(float x) {
-    return x <= 0.04045f ?
-        x * 0.0773993808f : // = 1.0f / 12.92f
-        pow((x + 0.055f) * 0.94786729857f, 2.4f); // 0.94786729857 = 1.0f / 1.055f
+    return x <= 0.04045 ? x * 0.0773993808 :           // = 1.0 / 12.92
+               pow((x + 0.055) * 0.94786729857, 2.4);  // 0.94786729857 = 1.0 / 1.055
 }
 
 void main() {
     const vec4 s = texture(Original, vTexCoord);
-    const float output_range = 1.0f - 0.1f * param.BLACK_POINT;
-    FragColor = vec4(0.1f * param.BLACK_POINT + srgb_to_linear(s[0]) * output_range,
-                     0.1f * param.BLACK_POINT + srgb_to_linear(s[1]) * output_range,
-                     0.1f * param.BLACK_POINT + srgb_to_linear(s[2]) * output_range, 1.0f);
+    const float output_range = 1.0 - 0.1 * param.BLACK_POINT;
+    FragColor = vec4(0.1 * param.BLACK_POINT + srgb_to_linear(s[0]) * output_range,
+                     0.1 * param.BLACK_POINT + srgb_to_linear(s[1]) * output_range,
+                     0.1 * param.BLACK_POINT + srgb_to_linear(s[2]) * output_range, 1.0);
 }

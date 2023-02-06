@@ -30,13 +30,13 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 float linear_to_srgb(float x) {
-    const float rel_gamma = 1.0f / param.OUTPUT_GAMMA;
+    const float rel_gamma = 1.0 / param.OUTPUT_GAMMA;
     return x <= 0.0031308 ?
-        x * 12.92f :
-        1.055f * pow(x, rel_gamma) - 0.055f;
+        x * 12.92 :
+        1.055f * pow(x, rel_gamma) - 0.055;
 }
 
 void main() {
     const vec4 s = texture(Source, vTexCoord);
-    FragColor = vec4(linear_to_srgb(s[0]), linear_to_srgb(s[1]), linear_to_srgb(s[2]), 1.0f);
+    FragColor = vec4(linear_to_srgb(s[0]), linear_to_srgb(s[1]), linear_to_srgb(s[2]), 1.0);
 }

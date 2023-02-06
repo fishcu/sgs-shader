@@ -1,7 +1,7 @@
 #version 450
 
 #include "parameters.slang"
-#include "signal_to_thickness.inc"
+#include "signal_to_thickness.slang"
 
 layout(push_constant) uniform Push {
     vec4 OutputSize;
@@ -52,10 +52,10 @@ void generate_mask_pattern(out vec4[MAX_MASK_PATTERN_SIZE / 4] mask, int length,
         }
         accum_error += num_groups;
         if (active_accum_error < 0 && accum_error < 0) {
-            mask[i / 4][i % 4] = 1.0f;
+            mask[i / 4][i % 4] = 1.0;
             active_accum_error += num_groups;
         } else {
-            mask[i / 4][i % 4] = 0.05f * (1.0f - param.MASK_STRENGTH);
+            mask[i / 4][i % 4] = 0.05 * (1.0 - param.MASK_STRENGTH);
         }
     }
 }
@@ -74,8 +74,8 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 
 float attenuate(float val, float offset_to_center, float radius) {
-    return pow(val, param.MASK_STRENGTH * (0.8f + param.MASK_STRENGTH * offset_to_center *
-                                                      offset_to_center * 80.0f * radius));
+    return pow(val, param.MASK_STRENGTH * (0.8 + param.MASK_STRENGTH * offset_to_center *
+                                                     offset_to_center * 80.0 * radius));
 }
 
 void main() {
@@ -92,8 +92,8 @@ void main() {
     // vTexCoord.y * param.OriginalSize.y == 13.57 and scanline center == 0.5.
     float offset_to_center =
         abs(modf(vTexCoord.y * param.OriginalSize.y, scanline_tex_y_int) - param.SCANLINE_CENTER);
-    if (offset_to_center > 0.5f) {
-        offset_to_center = abs(offset_to_center - 1.0f);
+    if (offset_to_center > 0.5) {
+        offset_to_center = abs(offset_to_center - 1.0);
     }
     const vec3 scanline_signal =
         texture(Source, vec2(vTexCoord.x,
@@ -104,8 +104,8 @@ void main() {
     const int coord_x = int(vTexCoord.x * param.OutputSize.x);
     const int pattern_size = int(param.MASK_PATTERN_SIZE);
 
-    const float min_radius = param.MIN_THICKNESS * 0.5f;
-    const float max_radius = param.MAX_THICKNESS * 0.5f;
+    const float min_radius = param.MIN_THICKNESS * 0.5;
+    const float max_radius = param.MAX_THICKNESS * 0.5;
     const float gamma_exp = exp(param.SPOT_GAMMA);
     if (bool(param.MASK_ENABLE_SUBPIXELS)) {
         const int idx[3] = { (coord_x * 3 + 0) % pattern_size, (coord_x * 3 + 1) % pattern_size,
