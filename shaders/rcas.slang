@@ -106,7 +106,9 @@ void main() {
     const vec3 sum_edges = sample_n + sample_e + sample_s + sample_w;
     const vec3 edge = -0.25 * min(min_edges / max_edges, (1.0 - max_edges) / (1.0 - min_edges));
     const float edges = clamp(max(edge.r, max(edge.g, edge.b)), -RCAS_LIMIT, 0.0);
-    float w = edges * param.RCAS_STRENGTH;
+
+    const float slider = mix(0.0, 1.0, frame_number_to_slider(float(param.FrameCount)));
+    float w = edges * slider;
 
     if (param.RCAS_DENOISE > 0.5) {
         // Luma times 2.

@@ -55,7 +55,7 @@ float dist_to_segment(vec2 p, vec2 v, vec2 w) {
 }
 
 float frame_number_to_slider (float number) {
-    const float freq = 1.0f / 120.0f;
+    const float freq = 1.0f / 90.0f;
     const float sin_min = 0.2f;
     const float sin_max = 0.8f;
     const float s = clamp(sin(number * freq) * 0.5f + 0.5f, sin_min, sin_max);
