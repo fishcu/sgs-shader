@@ -39,10 +39,9 @@ If you like to run the shader by default when opening the core, you can set it p
 ## Presets explained
 The following presets are available:
 - `sgs_DEFAULT`: The default preset. Optimized for 240p resolution content on 4k displays. However, it will also work for other input and output resolutions ("freescale" behavior).
-- `sgs_DEFAULT_MASK`: Same as the default preset, but enables an aperture grille mask pass.
+- `sgs_DEFAULT_MASK`: Same as the default preset, but enables an aperture grille mask effect.
 - `sgs_force_*`: These presets sample the input at a fixed resolution according to the file name. This can be used with higher resolution content to achieve a lower resolution look with emphasized scanlines.
-- `sgs_potato_pc`: Same as the default preset, but renders at a lower internal resolution and disables scanline bleeding. This should be used if the default preset runs too slow on your computer.
-- `sgs_super_high_res`: Same as the default preset, but renders at a much higher resolution. Ideal for running on beefy computers or 8k resolution displays, or for rendering small sprites. May crash on older GPUs that do not support large textures.
+- `sgs_potato_pc` & `sgs_potato_pc_mask`: Same as the default presets with and without the mask effect, but optimized for low-end hardware. This should be used if the default presets run too slow on your computer. Many of the features in the default preset will not be available with the potato preset, or will have no effect if changed in the settings.
 
 ## Ensuring sharp scaling
 On Windows, make sure to set the display scaling under display settings -> "Scale and layout" to 100%. Using custom settings such as 125% or 175% may cause scaling artifacts with RetroArch.
